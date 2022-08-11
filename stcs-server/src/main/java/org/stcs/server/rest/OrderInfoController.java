@@ -47,7 +47,7 @@ public class OrderInfoController extends AbstractRestController {
         preCheck(null);
         try {
             List<OrderInfoEntity> orderInfoEntities = orderService.findAll();
-            JSONArray orders = JSONArray.of(orderInfoEntities);
+            JSONArray orders = JSONArray.of(orderInfoEntities.toArray());
             resp = new JSONObject();
             resp.put("orders", orders);
             resp.put("total", orders.size());
