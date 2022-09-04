@@ -19,6 +19,7 @@ public abstract class AbstractRestController {
     }
 
     protected void preCheck(JSONObject req) {
+        log.info("start pre check...");
     }
 
 }

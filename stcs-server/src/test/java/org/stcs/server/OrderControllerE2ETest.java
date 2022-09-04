@@ -1,5 +1,8 @@
 package org.stcs.server;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.alibaba.fastjson2.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -15,27 +18,24 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.stcs.server.service.OrderInfoService;
+import org.stcs.server.service.OrderService;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //@DataMongoTest
 @SpringBootTest
 @AutoConfigureMockMvc
 //@WebMvcTest(controllers = OrderInfoController.class)
-public class OrderInfoControllerE2ETest {
-    private static final Logger logger = LoggerFactory.getLogger(OrderInfoControllerE2ETest.class);
+public class OrderControllerE2ETest {
+    private static final Logger logger = LoggerFactory.getLogger(OrderControllerE2ETest.class);
 
     private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo"));
-
+    private static final String ORDERS_PATH = "/stcs/api/v1/orders";
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private OrderInfoService orderInfoService;
+    private OrderService orderService;
 
     @DynamicPropertySource
     static void mongodbProperties(DynamicPropertyRegistry registry) {
@@ -44,28 +44,41 @@ public class OrderInfoControllerE2ETest {
     }
 
     @Test
-    void testAddOnceAndQueryOnce() throws Exception {
+    void testAddOrder() throws Exception {
+
         String newOrderInfoStr = "{\"orderId\": 401,\"orderDesc\": \"new order test #1\",\"custId\": 101,\"partId\": 301}";
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/stcs/v1/order/add")
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(ORDERS_PATH)
                 .accept(MediaType.APPLICATION_JSON).content(newOrderInfoStr)
                 .contentType(MediaType.APPLICATION_JSON);
         MockHttpServletResponse response = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         logger.info(response.getContentAsString());
+
         JSONObject retBodyJson = JSONObject.parseObject(response.getContentAsString());
         assertThat(retBodyJson.get("message")).isEqualTo("ok");
         assertThat(retBodyJson.get("messageId")).isNotNull();
 
-        requestBuilder = MockMvcRequestBuilders.get("/stcs/v1/order/find");
-        response = mockMvc.perform(requestBuilder)
+    }
+
+    @Test
+    void testGetOrders() throws Exception {
+
+        String expectedResponse = "{\"orderId\": 401,\"orderDesc\": \"new order test #1\",\"custId\": 101,\"partId\": 301}";
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/stcs/api/v1/orders");
+        MockHttpServletResponse response = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         logger.info(response.getContentAsString());
-        retBodyJson = JSONObject.parseObject(response.getContentAsString());
+        JSONObject retBodyJson = JSONObject.parseObject(response.getContentAsString());
+
         assertThat(retBodyJson.getString("code")).isEqualTo("ok");
         assertThat(retBodyJson.getIntValue("total")).isEqualTo(1);
-        JSONObject resultJson = retBodyJson.getJSONArray("orders").getJSONObject(0);
-        JSONAssert.assertEquals(resultJson.toString(), newOrderInfoStr, false);
+
+        JSONObject resultJson = retBodyJson.getJSONArray("records").getJSONObject(0);
+        JSONAssert.assertEquals(resultJson.toString(), expectedResponse, false);
+
     }
 }

@@ -10,6 +10,7 @@
 	<logger name="org.springframework" level="INFO" />
 	<logger name="com.netflix.discovery" level="INFO" />
 	<logger name="org.mongodb.driver" level="INFO" />
+	<logger name="io.undertow.request.security" level="INFO" />
 
 	<logger name="org.stcs.server" level="DEBUG" />
 

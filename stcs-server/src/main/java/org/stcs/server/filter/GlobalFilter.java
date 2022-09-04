@@ -35,10 +35,9 @@ public class GlobalFilter implements Filter {
         HttpServletRequest httpServlet = (HttpServletRequest) request;
         final String reqUrl = httpServlet.getRequestURI();
         if (reqUrl.startsWith("/health") || reqUrl.startsWith("/actuator")) {
-            chain.doFilter(request, response);
-        } else {
-            chain.doFilter(request, response);
+            log.debug("non business request, ignore it.");
         }
+        chain.doFilter(request, response);
     }
 
 }
