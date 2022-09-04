@@ -5,9 +5,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "part_info")
-public class PartInfoDTO {
+public class PartDto {
     private int partId;
     private String partDesc;
-    private int materId;
+    private MaterialSpecDto materialSpec;
     private int partNum;
 }

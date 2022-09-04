@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "dock_info")
-public class DockInfoDTO implements Serializable {
+public class DockDto implements Serializable {
     private int dockId;
     private String dockDesc;
 }

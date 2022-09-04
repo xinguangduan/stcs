@@ -1,4 +1,4 @@
-package org.stcs.server.entity;
+package org.stcs.server.exception;
 
 import java.io.Serializable;
 
