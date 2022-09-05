@@ -17,7 +17,7 @@ import org.stcs.server.service.MaterialSpecService;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/v1/materials")
+@RequestMapping("/api/v1/materials")
 public class MaterialSpecController extends AbstractRestController {
 
     private final MaterialSpecService materialSpecService;
@@ -35,7 +35,7 @@ public class MaterialSpecController extends AbstractRestController {
         return ResponseEntity.ok().body(resp);
     }
 
-    @GetMapping(value = "/{materialId}")
+    @GetMapping("/{materialId}")
     public ResponseEntity find(@PathVariable int materialId) {
         final MaterialSpecEntity materialSpecEntity = materialSpecService.find(materialId);
         log.info("find result {}", materialSpecEntity);

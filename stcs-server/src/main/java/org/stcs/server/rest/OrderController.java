@@ -23,7 +23,7 @@ import org.stcs.server.utils.KeyUtils;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/v1/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderController extends AbstractRestController {
 
     private final OrderService orderService;
@@ -35,11 +35,6 @@ public class OrderController extends AbstractRestController {
         this.transCalculationService = transCalculationService;
     }
 
-    /**
-     * get all orders
-     *
-     * @return
-     */
     @GetMapping
     public ResponseEntity find() throws STCSException {
         JSONObject resp = null;
@@ -58,7 +53,7 @@ public class OrderController extends AbstractRestController {
         }
     }
 
-    @GetMapping(value = "/{orderId}")
+    @GetMapping("/{orderId}")
     public ResponseEntity findOne(@PathVariable int orderId) {
         final OrderEntity orderEntity = orderService.find(orderId);
         log.info("find result {}", orderEntity);
@@ -77,7 +72,7 @@ public class OrderController extends AbstractRestController {
         return ResponseEntity.ok(res);
     }
 
-    @PutMapping(value = "/{orderId}")
+    @PutMapping("/{orderId}")
     public ResponseEntity update(@RequestBody JSONObject req, @PathVariable int orderId) {
         final OrderEntity orderEntity = orderService.find(orderId);
         if (orderEntity == null) {
@@ -92,7 +87,7 @@ public class OrderController extends AbstractRestController {
         return ResponseEntity.ok().body(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @DeleteMapping(value = "/{orderId}")
+    @DeleteMapping("/{orderId}")
     public ResponseEntity delete(@PathVariable int orderId) {
         long result = orderService.delete(orderId);
         if (result > 0) {
@@ -101,7 +96,7 @@ public class OrderController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1002, "delete failure"));
     }
 
-    @PostMapping(value = "/{orderId}/start")
+    @PostMapping("/{orderId}/start")
     public ResponseEntity start(@PathVariable int orderId) {
         log.info("start transportation ...");
         final OrderEntity orderEntity = orderService.find(orderId);

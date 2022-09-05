@@ -45,24 +45,24 @@ public class DockDao {
         return res;
     }
 
-    public Collection<DockDto> insert(DockDto partDto) {
-        return insert(Arrays.asList(partDto));
+    public Collection<DockDto> insert(DockDto dockDto) {
+        return insert(Arrays.asList(dockDto));
     }
 
     public Collection<DockDto> insert(List<DockDto> partList) {
         return mongoTemplate.insertAll(partList);
     }
 
-    public UpdateResult update(DockDto partDto) {
-        Query query = buildUserUniqueQuery(partDto.getDockId());
+    public UpdateResult update(DockDto dockDto) {
+        Query query = buildUserUniqueQuery(dockDto.getDockId());
         Update update = new Update();
-        update.set("dockDesc", partDto.getDockDesc());
-        return mongoTemplate.findAndModify(query, update, UpdateResult.class);
+        update.set("dockDesc", dockDto.getDockDesc());
+        return mongoTemplate.updateMulti(query, update, DockDto.class);
     }
 
     public DeleteResult delete(int dockId) {
         Query query = buildUserUniqueQuery(dockId);
-        return mongoTemplate.findAndRemove(query, DeleteResult.class);
+        return mongoTemplate.remove(query, DockDto.class);
     }
 
     private static Query buildUserUniqueQuery(int dockId) {

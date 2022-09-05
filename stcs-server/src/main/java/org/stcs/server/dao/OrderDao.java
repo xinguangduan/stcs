@@ -8,7 +8,6 @@ import java.util.List;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.BsonValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -61,44 +60,12 @@ public class OrderDao {
         Query query = buildUserUniqueQuery(orderDto.getOrderId());
         Update update = new Update();
         update.set("orderDesc", orderDto.getOrderDesc());
-        OrderDto dto = mongoTemplate.findAndModify(query, update, OrderDto.class);
-        return new UpdateResult() {
-            @Override
-            public boolean wasAcknowledged() {
-                return false;
-            }
-
-            @Override
-            public long getMatchedCount() {
-                return 0;
-            }
-
-            @Override
-            public long getModifiedCount() {
-                return 0;
-            }
-
-            @Override
-            public BsonValue getUpsertedId() {
-                return null;
-            }
-        };
+        return mongoTemplate.updateMulti(query, update, OrderDto.class);
     }
 
     public DeleteResult delete(int orderId) {
         Query query = buildUserUniqueQuery(orderId);
-        OrderDto dto = mongoTemplate.findAndRemove(query, OrderDto.class);
-        return new DeleteResult() {
-            @Override
-            public boolean wasAcknowledged() {
-                return false;
-            }
-
-            @Override
-            public long getDeletedCount() {
-                return 0;
-            }
-        };
+        return mongoTemplate.remove(query, OrderDto.class);
     }
 
     private static Query buildUserUniqueQuery(int orderId) {

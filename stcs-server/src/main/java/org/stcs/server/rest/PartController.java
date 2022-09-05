@@ -18,7 +18,7 @@ import org.stcs.server.service.PartService;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/v1/parts")
+@RequestMapping("/api/v1/parts")
 public class PartController extends AbstractRestController {
 
     private final PartService partService;
