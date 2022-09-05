@@ -1,14 +1,12 @@
 package org.stcs.server.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @ToString
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class CustomerEntity {
     private int custId;
     private String custName;

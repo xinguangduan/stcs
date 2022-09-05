@@ -53,7 +53,7 @@ public class MaterialSpecController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
     }
 
-    @PutMapping(value = "/{materialId}")
+    @PutMapping("/{materialId}")
     public ResponseEntity update(@RequestBody String req, @PathVariable int materialId) {
         final MaterialSpecEntity oldMaterialSpecEntity = materialSpecService.find(materialId);
         if (oldMaterialSpecEntity == null) {
@@ -67,7 +67,7 @@ public class MaterialSpecController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @DeleteMapping(value = "/{materialId}")
+    @DeleteMapping("/{materialId}")
     public ResponseEntity delete(@PathVariable int materialId) {
         long result = materialSpecService.delete(materialId);
         if (result > 0) {

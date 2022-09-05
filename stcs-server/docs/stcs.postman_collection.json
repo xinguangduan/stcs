@@ -517,10 +517,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    {\n        \"materialId\": 10001,\n        \"materialDesc\": \"put material spec test 1\",\n        \"materialSpec\": \"put material spec test\"\n    }\n}"
+					"raw": "{\n    \"materialId\": 10002,\n    \"materialDesc\": \"put material spec test 344\",\n    \"materialSpec\": \"put material spec test 322\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:8899/stcs/api/v1/materials/10001",
+					"raw": "http://localhost:8899/stcs/api/v1/materials/10002",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -531,7 +531,7 @@
 						"api",
 						"v1",
 						"materials",
-						"10001"
+						"10002"
 					]
 				}
 			},
