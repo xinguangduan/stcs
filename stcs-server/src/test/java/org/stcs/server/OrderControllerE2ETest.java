@@ -30,7 +30,7 @@ public class OrderControllerE2ETest {
     private static final Logger logger = LoggerFactory.getLogger(OrderControllerE2ETest.class);
 
     private static final MongoDBContainer mongoDBContainer = new MongoDBContainer(DockerImageName.parse("mongo"));
-    private static final String ORDERS_PATH = "/stcs/api/v1/orders";
+    private static final String ORDERS_PATH = "/api/v1/orders";
     @Autowired
     private MockMvc mockMvc;
 
@@ -57,7 +57,7 @@ public class OrderControllerE2ETest {
         logger.info(response.getContentAsString());
 
         JSONObject retBodyJson = JSONObject.parseObject(response.getContentAsString());
-        assertThat(retBodyJson.get("message")).isEqualTo("ok");
+        assertThat(retBodyJson.get("message")).isEqualTo("add success");
         assertThat(retBodyJson.get("messageId")).isNotNull();
 
     }
@@ -67,7 +67,7 @@ public class OrderControllerE2ETest {
 
         String expectedResponse = "{\"orderId\": 401,\"orderDesc\": \"new order test #1\",\"custId\": 101,\"partId\": 301}";
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/stcs/api/v1/orders");
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(ORDERS_PATH);
         MockHttpServletResponse response = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
