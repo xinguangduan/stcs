@@ -28,7 +28,7 @@ public class MaterialSpecController extends AbstractRestController {
     }
 
     @GetMapping
-    public ResponseEntity<JSONObject> find() {
+    public ResponseEntity find() {
         final List<MaterialSpecEntity> materialSpecEntities = materialSpecService.findAll();
         log.info("find result {}", materialSpecEntities);
         JSONObject resp = buildResponseCollections(materialSpecEntities);
@@ -36,7 +36,7 @@ public class MaterialSpecController extends AbstractRestController {
     }
 
     @GetMapping(value = "/{materialId}")
-    public ResponseEntity<JSONObject> find(@PathVariable int materialId) {
+    public ResponseEntity find(@PathVariable int materialId) {
         final MaterialSpecEntity materialSpecEntity = materialSpecService.find(materialId);
         log.info("find result {}", materialSpecEntity);
         JSONObject resp = buildResponseCollections(Arrays.asList(materialSpecEntity));

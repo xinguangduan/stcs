@@ -26,14 +26,17 @@ public class DockService {
     public DockEntity find(int dockId) {
         DockEntity dockEntity = DockEntity.builder().build();
         DockDto dockDto = dockDao.find(dockId);
+        if (dockDto == null) {
+            return null;
+        }
         BeanUtils.copyProperties(dockDto, dockEntity, "_id");
         return dockEntity;
     }
 
     public List<DockEntity> findAll() {
         List<DockEntity> dockEntities = new ArrayList<>();
-        List<DockDto> docks = dockDao.findAll();
-        docks.forEach(s -> {
+        List<DockDto> dockDtos = dockDao.findAll();
+        dockDtos.forEach(s -> {
             DockEntity dockEntity = DockEntity.builder().build();
             BeanUtils.copyProperties(s, dockEntity, "_id");
             dockEntities.add(dockEntity);

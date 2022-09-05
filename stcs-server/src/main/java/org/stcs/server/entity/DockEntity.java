@@ -11,6 +11,6 @@ import lombok.*;
 @Builder
 @ToString
 public class DockEntity {
-    private String dockId;
+    private int dockId;
     private String dockDesc;
 }

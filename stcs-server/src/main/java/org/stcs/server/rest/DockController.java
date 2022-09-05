@@ -26,8 +26,8 @@ public class DockController extends AbstractRestController {
         this.dockService = dockService;
     }
 
-    @GetMapping
-    public ResponseEntity find(@RequestBody String req) {
+    @GetMapping(value = "/")
+    public ResponseEntity find() {
         final List<DockEntity> dockEntities = dockService.findAll();
         log.info("find result {}", dockEntities);
         return ResponseEntity.ok().body(buildResponseCollections(dockEntities));

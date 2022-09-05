@@ -10,6 +10,6 @@ import lombok.*;
 public class PartEntity {
     private int partId;
     private String partDesc;
-    private int materialId;
+    private MaterialSpecEntity materialSpec;
     private int partNum;
 }
