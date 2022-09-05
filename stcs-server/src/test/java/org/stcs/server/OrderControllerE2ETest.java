@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.alibaba.fastjson2.JSONObject;
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
+import org.junit.runners.MethodSorters;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,7 @@ import org.testcontainers.utility.DockerImageName;
 @SpringBootTest
 @AutoConfigureMockMvc
 //@WebMvcTest(controllers = OrderInfoController.class)
+@FixMethodOrder(MethodSorters.JVM)
 public class OrderControllerE2ETest {
     private static final Logger logger = LoggerFactory.getLogger(OrderControllerE2ETest.class);
 

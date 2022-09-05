@@ -16,7 +16,7 @@ import org.stcs.server.service.DockService;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/v1/docks")
+@RequestMapping("/api/v1/docks")
 public class DockController extends AbstractRestController {
 
     private final DockService dockService;
@@ -26,14 +26,14 @@ public class DockController extends AbstractRestController {
         this.dockService = dockService;
     }
 
-    @GetMapping(value = "/")
+    @GetMapping
     public ResponseEntity find() {
         final List<DockEntity> dockEntities = dockService.findAll();
         log.info("find result {}", dockEntities);
         return ResponseEntity.ok().body(buildResponseCollections(dockEntities));
     }
 
-    @GetMapping(value = "/{dockId}")
+    @GetMapping("/{dockId}")
     public ResponseEntity findOne(@PathVariable int dockId) {
         final DockEntity dockEntity = dockService.find(dockId);
         if (dockEntity == null) {
@@ -53,7 +53,7 @@ public class DockController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
     }
 
-    @PutMapping(value = "/{dockId}")
+    @PutMapping("/{dockId}")
     public ResponseEntity update(@RequestBody String req, @PathVariable int dockId) {
         final DockEntity dockEntity = dockService.find(dockId);
         if (dockEntity == null) {
@@ -68,7 +68,7 @@ public class DockController extends AbstractRestController {
         return ResponseEntity.ok().body(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @DeleteMapping(value = "/{dockId}")
+    @DeleteMapping("/{dockId}")
     public ResponseEntity delete(@PathVariable int dockId) {
         long result = dockService.delete(dockId);
         log.info("delete count {}, dockId {}", result, dockId);

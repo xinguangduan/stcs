@@ -65,12 +65,12 @@ public class MaterialSpecDao {
         Update update = new Update();
         update.set("materialSpec", materialSpecDto.getMaterialSpec());
         update.set("materialDesc", materialSpecDto.getMaterialDesc());
-        return mongoTemplate.findAndModify(query, update, UpdateResult.class);
+        return mongoTemplate.updateMulti(query, update, UpdateResult.class);
     }
 
     public DeleteResult delete(int materialId) {
         Query query = buildUserUniqueQuery(materialId);
-        return mongoTemplate.findAndRemove(query, DeleteResult.class);
+        return mongoTemplate.remove(query, DeleteResult.class);
     }
 
     private static Query buildUserUniqueQuery(int materialId) {

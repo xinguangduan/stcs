@@ -17,7 +17,7 @@ import org.stcs.server.service.CustomerService;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/v1/customers")
+@RequestMapping(value = "/api/v1/customers")
 public class CustomerController extends AbstractRestController {
 
     private final CustomerService customerService;
@@ -34,7 +34,7 @@ public class CustomerController extends AbstractRestController {
         return ResponseEntity.ok().body(buildResponseCollections(customerEntities));
     }
 
-    @GetMapping(value = "/{custId}")
+    @GetMapping("/{custId}")
     public ResponseEntity findOne(@PathVariable int custId) {
         final CustomerEntity customerEntity = customerService.find(custId);
         log.info("find result {}", customerEntity);
@@ -51,7 +51,7 @@ public class CustomerController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
     }
 
-    @PutMapping(value = "/{custId}")
+    @PutMapping("/{custId}")
     public ResponseEntity update(@RequestBody JSONObject req, @PathVariable int custId) {
         final CustomerEntity customerEntity = customerService.find(custId);
         if (customerEntity == null) {
@@ -65,7 +65,7 @@ public class CustomerController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @DeleteMapping(value = "/{custId}")
+    @DeleteMapping("/{custId}")
     public ResponseEntity delete(@PathVariable int custId) {
         long result = customerService.delete(custId);
         if (result > 0) {

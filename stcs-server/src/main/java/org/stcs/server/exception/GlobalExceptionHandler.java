@@ -2,11 +2,12 @@ package org.stcs.server.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.stcs.server.protocol.STCSProtocolBuilder;
 
 /**
  * 全局异常信息处理
@@ -29,12 +30,12 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public JSONObject handleRuntimeError(HttpServletRequest req, RuntimeException e) {
         log.error("catch RuntimeException,request url:{}", req.getRequestURL(), e);
-        return response("RuntimeException", "RuntimeException",  "unknown");
+        return response("RuntimeException", "RuntimeException", "unknown");
     }
 
     @ExceptionHandler(value = STCSException.class)
     @ResponseBody
-    public JSONObject handleFDNException(HttpServletRequest req, STCSException exp) {
+    public JSONObject handleSTCSException(HttpServletRequest req, STCSException exp) {
         STCSExceptionEntity expEntity = exp.getSTCSExceptionEntity();
         String code = null;
         String reason = null;
@@ -50,7 +51,7 @@ public class GlobalExceptionHandler {
 
     private static JSONObject response(String code, String reason, String desc) {
         // 返回错误信息
-        JSONObject response = null;
+        JSONObject response = STCSProtocolBuilder.buildFailure(code, reason);
         try {
             log.error("occurring exception, response content:{}", response);
         } catch (Exception e) {

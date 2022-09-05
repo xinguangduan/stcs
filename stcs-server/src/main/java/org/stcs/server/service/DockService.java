@@ -58,7 +58,6 @@ public class DockService {
             BeanUtils.copyProperties(s, dockDto);
             dockDtos.add(dockDto);
         });
-
         Collection<DockDto> resp = dockDao.insert(dockDtos);
         log.info("add result {}", resp);
         return resp.size();

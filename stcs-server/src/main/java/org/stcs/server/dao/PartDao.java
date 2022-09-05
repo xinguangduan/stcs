@@ -57,12 +57,12 @@ public class PartDao {
         Query query = buildUserUniqueQuery(partDto.getPartId());
         Update update = new Update();
         update.set("partDesc", partDto.getPartDesc());
-        return mongoTemplate.findAndModify(query, update, UpdateResult.class);
+        return mongoTemplate.updateMulti(query, update, UpdateResult.class);
     }
 
     public DeleteResult delete(int partId) {
         Query query = buildUserUniqueQuery(partId);
-        return mongoTemplate.findAndRemove(query, DeleteResult.class);
+        return mongoTemplate.remove(query, DeleteResult.class);
     }
 
     private static Query buildUserUniqueQuery(int partId) {
