@@ -29,7 +29,7 @@ public class MaterialSpecDao {
 
 
     public MaterialSpecDto find(int materialId) {
-        Query query = buildUserUniqueQuery(materialId);
+        Query query = buildUniqueQuery(materialId);
         final long begin = System.currentTimeMillis();
         MaterialSpecDto res = mongoTemplate.findOne(query, MaterialSpecDto.class);
         if (log.isDebugEnabled()) {
@@ -61,19 +61,19 @@ public class MaterialSpecDao {
     }
 
     public UpdateResult update(MaterialSpecDto materialSpecDto) {
-        Query query = buildUserUniqueQuery(materialSpecDto.getMaterialId());
+        Query query = buildUniqueQuery(materialSpecDto.getMaterialId());
         Update update = new Update();
         update.set("materialSpec", materialSpecDto.getMaterialSpec());
         update.set("materialDesc", materialSpecDto.getMaterialDesc());
-        return mongoTemplate.updateMulti(query, update, UpdateResult.class);
+        return mongoTemplate.updateMulti(query, update, MaterialSpecDto.class);
     }
 
     public DeleteResult delete(int materialId) {
-        Query query = buildUserUniqueQuery(materialId);
-        return mongoTemplate.remove(query, DeleteResult.class);
+        Query query = buildUniqueQuery(materialId);
+        return mongoTemplate.remove(query, MaterialSpecDto.class);
     }
 
-    private static Query buildUserUniqueQuery(int materialId) {
+    private static Query buildUniqueQuery(int materialId) {
         return new Query().addCriteria(new Criteria("materialId").is(materialId));
     }
 }

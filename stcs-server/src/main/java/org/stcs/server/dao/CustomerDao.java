@@ -28,7 +28,7 @@ public class CustomerDao {
 
 
     public CustomerDto find(int custId) {
-        Query query = buildUserUniqueQuery(custId);
+        Query query = buildUniqueQuery(custId);
         final long begin = System.currentTimeMillis();
         CustomerDto res = mongoTemplate.findOne(query, CustomerDto.class);
         if (log.isDebugEnabled()) {
@@ -57,19 +57,19 @@ public class CustomerDao {
     }
 
     public UpdateResult update(CustomerDto customerDto) {
-        final Query query = buildUserUniqueQuery(customerDto.getCustId());
+        final Query query = buildUniqueQuery(customerDto.getCustId());
         Update update = new Update();
         update.set("custName", customerDto.getCustName());
-        return mongoTemplate.updateMulti(query, update, UpdateResult.class);
+        return mongoTemplate.updateMulti(query, update, CustomerDto.class);
     }
 
     public DeleteResult delete(int custId) {
-        final Query query = buildUserUniqueQuery(custId);
-        return mongoTemplate.remove(query, DeleteResult.class);
+        final Query query = buildUniqueQuery(custId);
+        return mongoTemplate.remove(query, CustomerDto.class);
     }
 
-    private static Query buildUserUniqueQuery(int orderId) {
-        return new Query().addCriteria(new Criteria("custId").is(orderId));
+    private static Query buildUniqueQuery(int custId) {
+        return new Query().addCriteria(new Criteria("custId").is(custId));
     }
 }
 

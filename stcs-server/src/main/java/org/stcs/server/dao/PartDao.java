@@ -26,7 +26,7 @@ public class PartDao {
     }
 
     public PartDto find(int partId) {
-        Query query = buildUserUniqueQuery(partId);
+        Query query = buildUniqueQuery(partId);
         final long begin = System.currentTimeMillis();
         PartDto res = mongoTemplate.findOne(query, PartDto.class);
         if (log.isDebugEnabled()) {
@@ -54,18 +54,18 @@ public class PartDao {
     }
 
     public UpdateResult update(PartDto partDto) {
-        Query query = buildUserUniqueQuery(partDto.getPartId());
+        Query query = buildUniqueQuery(partDto.getPartId());
         Update update = new Update();
         update.set("partDesc", partDto.getPartDesc());
-        return mongoTemplate.updateMulti(query, update, UpdateResult.class);
+        return mongoTemplate.updateMulti(query, update, PartDto.class);
     }
 
     public DeleteResult delete(int partId) {
-        Query query = buildUserUniqueQuery(partId);
-        return mongoTemplate.remove(query, DeleteResult.class);
+        Query query = buildUniqueQuery(partId);
+        return mongoTemplate.remove(query, PartDto.class);
     }
 
-    private static Query buildUserUniqueQuery(int partId) {
+    private static Query buildUniqueQuery(int partId) {
         return new Query().addCriteria(new Criteria("partId").is(partId));
     }
 }

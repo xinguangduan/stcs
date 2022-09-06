@@ -28,7 +28,7 @@ public class OrderDao {
 
 
     public OrderDto find(int orderId) {
-        Query query = buildUserUniqueQuery(orderId);
+        Query query = buildUniqueQuery(orderId);
         final long begin = System.currentTimeMillis();
         OrderDto res = mongoTemplate.findOne(query, OrderDto.class);
         if (log.isDebugEnabled()) {
@@ -57,18 +57,18 @@ public class OrderDao {
     }
 
     public UpdateResult update(OrderDto orderDto) {
-        Query query = buildUserUniqueQuery(orderDto.getOrderId());
+        Query query = buildUniqueQuery(orderDto.getOrderId());
         Update update = new Update();
         update.set("orderDesc", orderDto.getOrderDesc());
         return mongoTemplate.updateMulti(query, update, OrderDto.class);
     }
 
     public DeleteResult delete(int orderId) {
-        Query query = buildUserUniqueQuery(orderId);
+        Query query = buildUniqueQuery(orderId);
         return mongoTemplate.remove(query, OrderDto.class);
     }
 
-    private static Query buildUserUniqueQuery(int orderId) {
+    private static Query buildUniqueQuery(int orderId) {
         return new Query().addCriteria(new Criteria("orderId").is(orderId));
     }
 }
