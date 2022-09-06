@@ -27,7 +27,7 @@ public class DockDao {
 
 
     public DockDto find(int dockId) {
-        final Query query = buildUserUniqueQuery(dockId);
+        final Query query = buildUniqueQuery(dockId);
         final long begin = System.currentTimeMillis();
         DockDto res = mongoTemplate.findOne(query, DockDto.class);
         if (log.isDebugEnabled()) {
@@ -54,18 +54,18 @@ public class DockDao {
     }
 
     public UpdateResult update(DockDto dockDto) {
-        Query query = buildUserUniqueQuery(dockDto.getDockId());
+        Query query = buildUniqueQuery(dockDto.getDockId());
         Update update = new Update();
         update.set("dockDesc", dockDto.getDockDesc());
         return mongoTemplate.updateMulti(query, update, DockDto.class);
     }
 
     public DeleteResult delete(int dockId) {
-        Query query = buildUserUniqueQuery(dockId);
+        Query query = buildUniqueQuery(dockId);
         return mongoTemplate.remove(query, DockDto.class);
     }
 
-    private static Query buildUserUniqueQuery(int dockId) {
+    private static Query buildUniqueQuery(int dockId) {
         return new Query().addCriteria(new Criteria("dockId").is(dockId));
     }
 }
