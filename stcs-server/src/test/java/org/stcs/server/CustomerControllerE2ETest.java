@@ -53,7 +53,6 @@ public class CustomerControllerE2ETest extends AbstractTest {
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(CUSTOMERS_PATH)
                 .accept(MediaType.APPLICATION_JSON).content(JSON.toJSONBytes(customerEntities))
-                .characterEncoding(StandardCharsets.UTF_8.name())
                 .contentType(MediaType.APPLICATION_JSON);
         MockHttpServletResponse response = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
