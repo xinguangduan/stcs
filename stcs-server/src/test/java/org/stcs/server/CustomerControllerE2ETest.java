@@ -1,82 +1,78 @@
 package org.stcs.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.stcs.server.entity.CustomerEntity;
 import org.stcs.server.service.CustomerService;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-//@DataMongoTest
-@SpringBootTest
-@AutoConfigureMockMvc
-//@WebMvcTest(controllers = OrderInfoController.class)
-@Slf4j
-@TestMethodOrder(MethodOrderer.MethodName.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CustomerControllerE2ETest extends AbstractTest {
-
     private static final String CUSTOMERS_PATH = "/api/v1/customers";
-    @Autowired
-    private MockMvc mockMvc;
 
     @Autowired
     private CustomerService customerService;
 
+    @BeforeAll
+    void setUp() {
+        List<CustomerEntity> customerEntities = new ArrayList<>();
+        customerEntities.add(CustomerEntity.builder().custId(101).custName("太阳").build());
+        customerEntities.add(CustomerEntity.builder().custId(102).custName("月亮").build());
+        customerEntities.add(CustomerEntity.builder().custId(106).custName("Sea").build());
+        customerEntities.add(CustomerEntity.builder().custId(109).custName("泰山").build());
+        customerEntities.add(CustomerEntity.builder().custId(999).custName("宇宙").build());
+        customerService.add(customerEntities);
+    }
 
     @Test
     void testAddCustomer() throws Exception {
-
         final List<CustomerEntity> customerEntities = new ArrayList<>();
-        CustomerEntity customer = CustomerEntity.builder()
-                .custId(10)
-                .custName("张三")
-                .build();
-        customerEntities.add(customer);
+        customerEntities.add(CustomerEntity.builder().custId(10).custName("张三").build());
+        customerEntities.add(CustomerEntity.builder().custId(11).custName("天一").build());
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.post(CUSTOMERS_PATH)
-                .accept(MediaType.APPLICATION_JSON).content(JSON.toJSONBytes(customerEntities))
-                .characterEncoding(StandardCharsets.UTF_8.name())
-                .contentType(MediaType.APPLICATION_JSON);
-        MockHttpServletResponse response = mockMvc.perform(requestBuilder)
-                .andExpect(status().isOk())
-                .andReturn().getResponse();
-        log.info(response.getContentAsString());
-
+        MockHttpServletResponse response = getMockResponseByRestApiPostWithJson(CUSTOMERS_PATH, customerEntities);
         JSONObject retBodyJson = JSON.parseObject(response.getContentAsString());
 
         assertThat(retBodyJson.get("code")).isEqualTo("ok");
         assertThat(retBodyJson.get("messageId")).isNotNull();
-
     }
 
     @Test
     void testGet() throws Exception {
-        String expectedResponse = "{\"custId\": 10,\"custName\": \"张三\"}";
+        String expectedResponse = "[" +
+                "{\"custId\": 101,\"custName\": \"太阳\"}," +
+                "{\"custId\": 102,\"custName\": \"月亮\"}," +
+                "{\"custId\": 106,\"custName\": \"Sea\"}," +
+                "{\"custId\": 109,\"custName\": \"泰山\"}," +
+                "{\"custId\": 999,\"custName\": \"宇宙\"}" +
+                "]";
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(CUSTOMERS_PATH);
-        MockHttpServletResponse response = mockMvc.perform(requestBuilder)
-                .andExpect(status().isOk())
-                .andReturn().getResponse();
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        log.info(response.getContentAsString());
+        MockHttpServletResponse response = getMockResponseByRestApiGet(CUSTOMERS_PATH);
+        JSONObject retBodyJson = JSONObject.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.getString("code")).isEqualTo("ok");
+        assertThat(retBodyJson.getIntValue("total")).isGreaterThanOrEqualTo(5);
+
+        List<Object> resultJson = retBodyJson.getJSONArray("records").stream()
+                .filter(s -> List.of(101, 102, 106, 109, 999)
+                        .contains(((JSONObject) s).to(CustomerEntity.class).getCustId()))
+                .toList();
+        JSONAssert.assertEquals(expectedResponse, resultJson.toString(), false);
+    }
+
+    @Test
+    void testGetOneCustomer() throws Exception {
+        String expectedResponse = "{\"custId\": 999,\"custName\": \"宇宙\"}";
+
+        MockHttpServletResponse response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/999");
         JSONObject retBodyJson = JSONObject.parseObject(response.getContentAsString());
 
         assertThat(retBodyJson.getString("code")).isEqualTo("ok");
