@@ -30,6 +30,11 @@ public class CustomerControllerE2ETest extends AbstractTest {
         customerEntities.add(CustomerEntity.builder().custId(109).custName("泰山").build());
         customerEntities.add(CustomerEntity.builder().custId(999).custName("宇宙").build());
         customerService.add(customerEntities);
+
+        customerEntities.clear();
+        customerEntities.add(CustomerEntity.builder().custId(119901).custName("待更新").build());
+        customerEntities.add(CustomerEntity.builder().custId(119913).custName("待删除").build());
+        customerService.add(customerEntities);
     }
 
     @Test
@@ -80,5 +85,41 @@ public class CustomerControllerE2ETest extends AbstractTest {
 
         JSONObject resultJson = retBodyJson.getJSONArray("records").getJSONObject(0);
         JSONAssert.assertEquals(expectedResponse, resultJson.toString(), false);
+    }
+
+    @Test
+    void testUpdateOneCustomer() throws Exception {
+        final CustomerEntity customer = CustomerEntity.builder().custId(119901).custName("已更新").build();
+
+        MockHttpServletResponse response = getMockResponseByRestApiPutWithJson(
+                CUSTOMERS_PATH + "/" + customer.getCustId(), customer);
+        JSONObject retBodyJson = JSON.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.get("code")).isEqualTo("ok");
+        assertThat(retBodyJson.get("message")).isEqualTo("update success");
+        assertThat(retBodyJson.get("messageId")).isNotNull();
+
+        response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/" + customer.getCustId());
+        retBodyJson = JSON.parseObject(response.getContentAsString());
+
+        JSONObject resultJson = retBodyJson.getJSONArray("records").getJSONObject(0);
+        JSONAssert.assertEquals(JSONObject.toJSONString(customer), resultJson.toString(), false);
+    }
+
+    @Test
+    void testDeleteOneCustomer() throws Exception {
+        MockHttpServletResponse response = getMockResponseByRestApiDelete(CUSTOMERS_PATH + "/119913");
+        JSONObject retBodyJson = JSON.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.get("code")).isEqualTo("ok");
+        assertThat(retBodyJson.get("message")).isEqualTo("delete success");
+        assertThat(retBodyJson.get("messageId")).isNotNull();
+
+        response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/119913");
+        retBodyJson = JSON.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.get("code")).isEqualTo("RuntimeException");
+        assertThat(retBodyJson.get("reason")).isEqualTo("RuntimeException");
+        assertThat(retBodyJson.get("messageId")).isNotNull();
     }
 }
