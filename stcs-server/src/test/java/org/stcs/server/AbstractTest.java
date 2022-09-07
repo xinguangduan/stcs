@@ -57,4 +57,26 @@ public class AbstractTest {
 
         return response;
     }
+
+    MockHttpServletResponse getMockResponseByRestApiPutWithJson(String url, Object jsonObject) throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.put(url)
+                .accept(MediaType.APPLICATION_JSON).content(JSON.toJSONBytes(jsonObject))
+                .contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletResponse response = mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        log.info(response.getContentAsString());
+
+        return response;
+    }
+
+    MockHttpServletResponse getMockResponseByRestApiDelete(String url) throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(url);
+        MockHttpServletResponse response = mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        log.info(response.getContentAsString());
+
+        return response;
+    }
 }
