@@ -3,6 +3,7 @@ package org.stcs.server;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import org.junit.jupiter.api.*;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -118,8 +119,8 @@ public class CustomerControllerE2ETest extends AbstractTest {
         response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/119913");
         retBodyJson = JSON.parseObject(response.getContentAsString());
 
-        assertThat(retBodyJson.get("code")).isEqualTo("RuntimeException");
-        assertThat(retBodyJson.get("reason")).isEqualTo("RuntimeException");
-        assertThat(retBodyJson.get("messageId")).isNotNull();
+        assertThat(retBodyJson.get("code")).isEqualTo("ok");
+        assertThat(retBodyJson.get("total")).isEqualTo(0);
+        assertThat(retBodyJson.getJSONArray("records")).isEqualTo(JSONArray.of());
     }
 }

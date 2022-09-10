@@ -25,7 +25,8 @@ public class CustomerService {
     public CustomerEntity find(int custId) {
         CustomerEntity customerEntity = CustomerEntity.builder().build();
         CustomerDto customerDto = customerDao.find(custId);
-        BeanUtils.copyProperties(customerDto, customerEntity, "_id");
+        if (customerDto != null)
+            BeanUtils.copyProperties(customerDto, customerEntity, "_id");
         return customerEntity;
     }
 

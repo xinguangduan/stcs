@@ -3,7 +3,6 @@ package org.stcs.server.rest;
 import static org.stcs.server.constant.GlobalConstant.*;
 import static org.stcs.server.protocol.STCSProtocolBuilder.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
@@ -38,7 +37,10 @@ public class CustomerController extends AbstractRestController {
     public ResponseEntity findOne(@PathVariable int custId) {
         final CustomerEntity customerEntity = customerService.find(custId);
         log.info("find result {}", customerEntity);
-        return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(customerEntity)));
+        if (customerEntity.getCustId() == custId)
+            return ResponseEntity.ok().body(buildResponseCollections(List.of(customerEntity)));
+        else
+            return ResponseEntity.ok().body(buildResponseCollections(List.of()));
     }
 
     @PostMapping
