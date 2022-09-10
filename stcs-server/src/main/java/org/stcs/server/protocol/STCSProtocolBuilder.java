@@ -6,6 +6,7 @@ import static org.stcs.server.constant.GlobalConstant.SUCCESS_CODE;
 import java.util.Collection;
 
 import com.alibaba.fastjson2.JSONObject;
+import org.stcs.server.constant.ResultType;
 import org.stcs.server.utils.KeyUtils;
 
 public final class STCSProtocolBuilder {
@@ -56,6 +57,22 @@ public final class STCSProtocolBuilder {
         final JSONObject content = new JSONObject();
         content.put("code", code);
         content.put("reason", reason);
+        content.put("messageId", KeyUtils.generateMessageId());
+        return content;
+    }
+
+    public static JSONObject buildSuccess(ResultType resultType) {
+        final JSONObject content = new JSONObject();
+        content.put("code", resultType.getCode());
+        content.put("message", resultType.getInfo());
+        content.put("messageId", KeyUtils.generateMessageId());
+        return content;
+    }
+
+    public static JSONObject buildFailure(ResultType resultType) {
+        final JSONObject content = new JSONObject();
+        content.put("code", resultType.getCode());
+        content.put("reason", resultType.getInfo());
         content.put("messageId", KeyUtils.generateMessageId());
         return content;
     }
