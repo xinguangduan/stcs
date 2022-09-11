@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.stcs.server.constant.ResultType;
 import org.stcs.server.entity.CustomerEntity;
 import org.stcs.server.service.CustomerService;
 
@@ -97,8 +98,8 @@ public class CustomerControllerE2ETest extends AbstractTest {
                 CUSTOMERS_PATH + "/" + customer.getCustId(), customer);
         JSONObject retBodyJson = JSON.parseObject(response.getContentAsString());
 
-        assertThat(retBodyJson.get("code")).isEqualTo("ok");
-        assertThat(retBodyJson.get("message")).isEqualTo("update success");
+        assertThat(retBodyJson.get("code")).isEqualTo(ResultType.UPDATE_SUCCESS.getCode());
+        assertThat(retBodyJson.get("message")).isEqualTo(ResultType.UPDATE_SUCCESS.getInfo());
         assertThat(retBodyJson.get("messageId")).isNotNull();
 
         response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/" + customer.getCustId());
@@ -113,15 +114,15 @@ public class CustomerControllerE2ETest extends AbstractTest {
         MockHttpServletResponse response = getMockResponseByRestApiDelete(CUSTOMERS_PATH + "/119913");
         JSONObject retBodyJson = JSON.parseObject(response.getContentAsString());
 
-        assertThat(retBodyJson.get("code")).isEqualTo("ok");
-        assertThat(retBodyJson.get("message")).isEqualTo("delete success");
+        assertThat(retBodyJson.get("code")).isEqualTo(ResultType.DELETE_SUCCESS.getCode());
+        assertThat(retBodyJson.get("message")).isEqualTo(ResultType.DELETE_SUCCESS.getInfo());
         assertThat(retBodyJson.get("messageId")).isNotNull();
 
         response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/119913");
         retBodyJson = JSON.parseObject(response.getContentAsString());
 
-        assertThat(retBodyJson.get("code")).isEqualTo("RuntimeException");
-        assertThat(retBodyJson.get("reason")).isEqualTo("RuntimeException");
+        assertThat(retBodyJson.get("code")).isEqualTo(ResultType.CUSTOMER_NOT_FOUND.getCode());
+        assertThat(retBodyJson.get("reason")).isEqualTo(ResultType.CUSTOMER_NOT_FOUND.getInfo());
         assertThat(retBodyJson.get("messageId")).isNotNull();
     }
 }
