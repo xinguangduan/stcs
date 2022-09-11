@@ -1,5 +1,6 @@
 package org.stcs.server;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
@@ -35,7 +36,8 @@ public class AbstractTest {
     }
 
     MockHttpServletResponse getMockResponseByRestApiGet(String url) throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(url);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(url)
+                .with(httpBasic("stcs", "stcs"));
         MockHttpServletResponse response = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
@@ -48,6 +50,7 @@ public class AbstractTest {
 
     MockHttpServletResponse getMockResponseByRestApiPostWithJson(String url, Object jsonObject) throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.post(url)
+                .with(httpBasic("stcs", "stcs"))
                 .accept(MediaType.APPLICATION_JSON).content(JSON.toJSONBytes(jsonObject))
                 .contentType(MediaType.APPLICATION_JSON);
         MockHttpServletResponse response = mockMvc.perform(requestBuilder)
@@ -60,6 +63,7 @@ public class AbstractTest {
 
     MockHttpServletResponse getMockResponseByRestApiPutWithJson(String url, Object jsonObject) throws Exception {
         RequestBuilder requestBuilder = MockMvcRequestBuilders.put(url)
+                .with(httpBasic("stcs", "stcs"))
                 .accept(MediaType.APPLICATION_JSON).content(JSON.toJSONBytes(jsonObject))
                 .contentType(MediaType.APPLICATION_JSON);
         MockHttpServletResponse response = mockMvc.perform(requestBuilder)
@@ -71,7 +75,8 @@ public class AbstractTest {
     }
 
     MockHttpServletResponse getMockResponseByRestApiDelete(String url) throws Exception {
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(url);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.delete(url)
+                .with(httpBasic("stcs", "stcs"));
         MockHttpServletResponse response = mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
