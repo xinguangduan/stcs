@@ -1,7 +1,5 @@
 package org.stcs.server.service;
 
-import static org.stcs.server.constant.GlobalConstant.ERROR_1005;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,12 +14,11 @@ import org.stcs.server.dao.TransportPlanDao;
 import org.stcs.server.dto.TransportPlanDto;
 import org.stcs.server.entity.TransportPlanEntity;
 import org.stcs.server.exception.STCSException;
-import org.stcs.server.exception.STCSExceptionEntity;
 import org.stcs.server.mapper.TransportPlanMapper;
 
 @Slf4j
 @Service
-public class TransportPlanService {
+public class TransportPlanService extends AbstractService {
     private final TransportPlanDao planDao;
 
     public TransportPlanService(TransportPlanDao planDao) {
@@ -31,14 +28,7 @@ public class TransportPlanService {
     public TransportPlanEntity find(int planId) throws STCSException {
         TransportPlanEntity planEntity = TransportPlanEntity.builder().build();
         TransportPlanDto planDto = planDao.find(planId);
-        if (planDto == null) {
-            STCSExceptionEntity exceptionEntity = STCSExceptionEntity.builder()
-                    .code(ERROR_1005)
-                    .reason("not found the record")
-                    .description("not found the record")
-                    .build();
-            throw new STCSException(exceptionEntity);
-        }
+        checkNotFoundException(planDto);
         BeanUtils.copyProperties(planDto, planEntity, "_id");
         return planEntity;
     }

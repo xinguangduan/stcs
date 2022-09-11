@@ -12,7 +12,7 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/stcs
   security:
-    enabled: true
+    enabled: false
     user:
       name: stcs
       password: stcs

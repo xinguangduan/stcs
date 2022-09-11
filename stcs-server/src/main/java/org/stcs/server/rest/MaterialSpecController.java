@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.stcs.server.service.MaterialSpecService;
 
 @RestController
 @Slf4j
+@SecurityRequirement(name = "stcs")
 @RequestMapping("/api/v1/materials")
 public class MaterialSpecController extends AbstractController {
 

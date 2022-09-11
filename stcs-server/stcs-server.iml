@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
@@ -61,6 +62,11 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.22" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.36" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-security:2.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-config:5.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:5.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-crypto:5.7.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:5.7.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.7.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.7.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.7.3" level="project" />

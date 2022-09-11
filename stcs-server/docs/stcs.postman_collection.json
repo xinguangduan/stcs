@@ -9,7 +9,19 @@
       "name": "stcs-orders",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "POST",
         "header": [
@@ -45,6 +57,21 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [
           {
@@ -79,6 +106,21 @@
         "disableBodyPruning": true
       },
       "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
         "method": "GET",
         "header": [
           {
@@ -109,10 +151,73 @@
       "response": []
     },
     {
+      "name": "stcs-orders",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/orders/1/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "orders",
+            "1",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "stcs-orders-start",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "POST",
         "header": [
@@ -148,7 +253,19 @@
       "name": "stcs-orders",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "PUT",
         "header": [
@@ -183,7 +300,19 @@
       "name": "stcs-orders",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "DELETE",
         "header": [
@@ -218,7 +347,19 @@
       "name": "stcs-customers",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "POST",
         "header": [
@@ -229,7 +370,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "[\n    {\n        \"custId\": 10003,\n        \"custName\": \"new cust test\"\n    },\n    {\n        \"custId\": 10004,\n        \"custName\": \"new cust test\"\n    }\n]"
+          "raw": "[\n    {\n        \"custId\": 10003,\n        \"custName\": \"new cust test\"\n    }\n]"
         },
         "url": {
           "raw": "http://localhost:8899/stcs/api/v1/customers",
@@ -255,7 +396,19 @@
       },
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "GET",
         "header": [
@@ -306,7 +459,7 @@
           "raw": ""
         },
         "url": {
-          "raw": "http://localhost:8899/stcs/api/v1/customers/10001",
+          "raw": "http://localhost:8899/stcs/api/v1/customers/10003",
           "protocol": "http",
           "host": [
             "localhost"
@@ -317,7 +470,46 @@
             "api",
             "v1",
             "customers",
-            "10001"
+            "10003"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-customers",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/customers/2/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "customers",
+            "2",
+            "2"
           ]
         }
       },
@@ -327,7 +519,19 @@
       "name": "stcs-customers",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "PUT",
         "header": [
@@ -338,10 +542,10 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "[\n    {\n        \"custId\": 10001,\n        \"custName\": \"put cust test\"\n    }\n]"
+          "raw": "{\n    \"custId\": 10003,\n    \"custName\": \"put cust test add\"\n}"
         },
         "url": {
-          "raw": "http://localhost:8899/stcs/api/v1/customers/10001",
+          "raw": "http://localhost:8899/stcs/api/v1/customers/10003",
           "protocol": "http",
           "host": [
             "localhost"
@@ -352,7 +556,7 @@
             "api",
             "v1",
             "customers",
-            "10001"
+            "10003"
           ]
         }
       },
@@ -362,7 +566,19 @@
       "name": "stcs-customers",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "DELETE",
         "header": [
@@ -504,9 +720,60 @@
     },
     {
       "name": "stcs-material-spec",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
       "request": {
         "auth": {
           "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/materials/1/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "materials",
+            "1",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-material-spec",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "PUT",
         "header": [
@@ -541,7 +808,19 @@
       "name": "stcs-material-spec",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "DELETE",
         "header": [
@@ -576,7 +855,19 @@
       "name": "stcs-docks",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "POST",
         "header": [
@@ -613,7 +904,19 @@
       },
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "GET",
         "header": [
@@ -650,7 +953,70 @@
       },
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/docks/1/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "docks",
+            "1",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-docks",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "GET",
         "header": [
@@ -685,7 +1051,19 @@
       "name": "stcs-docks",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "PUT",
         "header": [
@@ -720,7 +1098,19 @@
       "name": "stcs-docks",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "DELETE",
         "header": [
@@ -755,7 +1145,19 @@
       "name": "stcs-parts",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "POST",
         "header": [
@@ -766,7 +1168,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "[\n    {\n        \"partId\": 10001,\n        \"partDesc\": \"new part test\"\n    },\n    {\n        \"partId\": 10002,\n        \"partDesc\": \"new part test\"\n    }\n]"
+          "raw": "[\n    {\n        \"partId\": 10005,\n        \"partDesc\": \"new part test 10001\",\n        \"material\": {\n            \"materialId\": 10001,\n            \"materialDesc\": \"材料a\",\n            \"materialSpec\": \"4*4*5\"\n        },\n        \"partNum\": 101\n    },\n    {\n        \"partId\": 10006,\n        \"partDesc\": \"new part test 10002\",\n        \"material\": {\n            \"materialId\": 10002,\n            \"materialDesc\": \"材料b\",\n            \"materialSpec\": \"3*4*5\"\n        },\n        \"partNum\": 151\n    }\n]"
         },
         "url": {
           "raw": "http://localhost:8899/stcs/api/v1/parts",
@@ -792,7 +1194,19 @@
       },
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "GET",
         "header": [
@@ -829,7 +1243,70 @@
       },
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/parts/3/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "parts",
+            "3",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-parts",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "GET",
         "header": [
@@ -864,7 +1341,19 @@
       "name": "stcs-parts",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "PUT",
         "header": [
@@ -899,7 +1388,19 @@
       "name": "stcs-parts",
       "request": {
         "auth": {
-          "type": "noauth"
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
         },
         "method": "DELETE",
         "header": [
@@ -913,7 +1414,7 @@
           "raw": ""
         },
         "url": {
-          "raw": "http://localhost:8899/stcs/api/v1/parts/10001",
+          "raw": "http://localhost:8899/stcs/api/v1/parts/10002",
           "protocol": "http",
           "host": [
             "localhost"
@@ -924,7 +1425,297 @@
             "api",
             "v1",
             "parts",
+            "10002"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-transplans",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "[\n    {\n        \"planId\": 10001,\n        \"custId\": 10001,\n        \"orderId\": 10001,\n        \"dockId\": 10001\n    },\n    {\n        \"planId\": 10002,\n        \"custId\": 10002,\n        \"orderId\": 10002,\n        \"dockId\": 10002\n    }\n]"
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/transplans",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "transplans"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-transplans",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/transplans",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "transplans"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-transplans",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/transplans/10001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "transplans",
             "10001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-transplans",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/transplans/1/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "transplans",
+            "1",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-transplans",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"planId\": 10002,\n    \"custId\": 10003,\n    \"order_id\": 10004,\n    \"dock_id\": 10004\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/transplans/10001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "transplans",
+            "10001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "stcs-transplans",
+      "request": {
+        "auth": {
+          "type": "basic",
+          "basic": [
+            {
+              "key": "password",
+              "value": "stcs",
+              "type": "string"
+            },
+            {
+              "key": "username",
+              "value": "stcs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8899/stcs/api/v1/transplans/10002",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8899",
+          "path": [
+            "stcs",
+            "api",
+            "v1",
+            "transplans",
+            "10002"
           ]
         }
       },
