@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "trans_plan")
-public class TransPlanDto {
+public class TransportPlanDto {
     private int planId;
     private int custId;
     private int orderId;

@@ -14,36 +14,43 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.dto.OrderDto;
 
 @Slf4j
 @Service
-public class OrderDao {
+public class OrderDao extends AbstractDao<OrderDto> {
     private final MongoTemplate mongoTemplate;
 
     @Autowired
     public OrderDao(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+        super.setMongoTemplate(mongoTemplate);
     }
 
+    private static Query buildQuery(OrderDto orderDto) {
+        if (orderDto.getOrderId() == 0) {
+            return new Query();
+        }
+        return new Query().addCriteria(new Criteria("orderDesc").regex(".*?" + orderDto.getOrderDesc() + ".*?"));
+    }
+
+    private static Query buildUniqueQuery(int orderId) {
+        return new Query().addCriteria(new Criteria("orderId").is(orderId));
+    }
 
     public OrderDto find(int orderId) {
         Query query = buildUniqueQuery(orderId);
-        final long begin = System.currentTimeMillis();
-        OrderDto res = mongoTemplate.findOne(query, OrderDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("orderId:{},find result:{},cost(ms):{}", orderId, res, (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findOne(query, OrderDto.class);
     }
 
     public List<OrderDto> findAll() {
-        final long begin = System.currentTimeMillis();
-        List<OrderDto> res = mongoTemplate.findAll(OrderDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("find all order info,find result:{},cost(ms):{}", res.size(), (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findAll(OrderDto.class);
+    }
+
+    public Pagination<OrderDto> find(Pagination pagination, OrderDto orderDto) {
+        Query query = buildQuery(orderDto);
+        return pagination(OrderDto.class, pagination.getPageSize(), pagination.getPageNum(), query);
     }
 
     public Collection<OrderDto> insert(OrderDto req) {
@@ -52,8 +59,7 @@ public class OrderDao {
     }
 
     public Collection<OrderDto> insert(List<OrderDto> orderDtoList) {
-        Collection<OrderDto> insertResult = mongoTemplate.insertAll(orderDtoList);
-        return insertResult;
+        return mongoTemplate.insertAll(orderDtoList);
     }
 
     public UpdateResult update(OrderDto orderDto) {
@@ -66,10 +72,6 @@ public class OrderDao {
     public DeleteResult delete(int orderId) {
         Query query = buildUniqueQuery(orderId);
         return mongoTemplate.remove(query, OrderDto.class);
-    }
-
-    private static Query buildUniqueQuery(int orderId) {
-        return new Query().addCriteria(new Criteria("orderId").is(orderId));
     }
 }
 

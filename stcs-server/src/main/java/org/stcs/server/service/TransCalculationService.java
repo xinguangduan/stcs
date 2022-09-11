@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.stcs.server.core.TransControlCalculationEngine;
 import org.stcs.server.entity.OrderEntity;
-import org.stcs.server.entity.TransPlanEntity;
-import org.stcs.server.entity.TransStepEntity;
+import org.stcs.server.entity.TransportPlanEntity;
+import org.stcs.server.entity.TransportStepEntity;
 
 @Service
 @Slf4j
@@ -22,11 +22,11 @@ public class TransCalculationService {
     public boolean startTrans(OrderEntity orderEntity) {
 
         log.info("start execute transport steps...");
-        TransPlanEntity transPlanEntity = new TransPlanEntity();
+        TransportPlanEntity transportPlanEntity = new TransportPlanEntity();
 
-        List<TransStepEntity> steps = transControlCalculationEngine.calculate(transPlanEntity);
+        List<TransportStepEntity> steps = transControlCalculationEngine.calculate(transportPlanEntity);
 
-        for (TransStepEntity step : steps) {
+        for (TransportStepEntity step : steps) {
             log.info("current execute step :{}", step);
         }
         log.info("All steps are complete.");

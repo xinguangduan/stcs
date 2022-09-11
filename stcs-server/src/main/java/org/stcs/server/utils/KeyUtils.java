@@ -1,7 +1,6 @@
 package org.stcs.server.utils;
 
 
-
 import java.util.UUID;
 
 public final class KeyUtils {

@@ -8,6 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class PartDto {
     private int partId;
     private String partDesc;
-    private MaterialSpecDto materialSpec;
+    private MaterialSpecDto material;
     private int partNum;
 }

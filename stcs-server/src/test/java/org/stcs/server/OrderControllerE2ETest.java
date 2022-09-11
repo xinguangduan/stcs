@@ -2,6 +2,9 @@ package org.stcs.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.alibaba.fastjson2.JSONObject;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -15,9 +18,6 @@ import org.stcs.server.entity.OrderEntity;
 import org.stcs.server.entity.PartEntity;
 import org.stcs.server.service.OrderService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class OrderControllerE2ETest extends AbstractTest {
     private static final String ORDERS_PATH = "/api/v1/orders";
@@ -30,7 +30,7 @@ public class OrderControllerE2ETest extends AbstractTest {
         List<PartEntity> partEntities = new ArrayList<>();
         PartEntity part = PartEntity.builder()
                 .partId(301).partDesc("part 001")
-                .materialSpec(MaterialSpecEntity.builder()
+                .material(MaterialSpecEntity.builder()
                         .materialId(302).materialDesc("material 001").materialSpec("3x5")
                         .build())
                 .partNum(8)

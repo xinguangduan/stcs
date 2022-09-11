@@ -16,6 +16,10 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 @Slf4j
 public class MongoConfig implements EnvironmentAware {
 
+    @Setter
+    @Getter
+    private Environment env;
+
     @Bean
     public MappingMongoConverter mappingMongoConverter(MongoDatabaseFactory factory, MongoMappingContext context,
                                                        BeanFactory beanFactory) {
@@ -28,10 +32,6 @@ public class MongoConfig implements EnvironmentAware {
         log.info(":::spring.data.mongodb.uri:{}", env.getProperty("spring.data.mongodb.uri"));
         return mappingConverter;
     }
-
-    @Setter
-    @Getter
-    private Environment env;
 
     @Override
     public void setEnvironment(Environment environment) {

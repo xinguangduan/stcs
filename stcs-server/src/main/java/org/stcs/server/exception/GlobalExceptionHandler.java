@@ -18,6 +18,17 @@ import org.stcs.server.protocol.STCSProtocolBuilder;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    private static JSONObject response(String code, String reason, String desc) {
+        // 返回错误信息
+        JSONObject response = STCSProtocolBuilder.buildFailure(code, reason);
+        try {
+            log.error("occurring exception, response content:{}", response);
+        } catch (Exception e) {
+            log.error("Global exception build response message", e);
+        }
+        return response;
+    }
+
     @ExceptionHandler(value = {Exception.class})
     @ResponseBody
     public JSONObject handleOtherError(HttpServletRequest req, Exception e) {
@@ -45,19 +56,8 @@ public class GlobalExceptionHandler {
             reason = expEntity.getReason();
             description = expEntity.getDescription();
         }
-        log.error("STCSException error,url:{},dialogId:{},description:{}", req.getRequestURL(), exp);
+        log.error("STCSException error,url:{},dialogId:{},description:{}", req.getRequestURL(), exp.getSTCSExceptionEntity());
         return response(code, reason, description);
-    }
-
-    private static JSONObject response(String code, String reason, String desc) {
-        // 返回错误信息
-        JSONObject response = STCSProtocolBuilder.buildFailure(code, reason);
-        try {
-            log.error("occurring exception, response content:{}", response);
-        } catch (Exception e) {
-            log.error("Global exception build response message", e);
-        }
-        return response;
     }
 
 }

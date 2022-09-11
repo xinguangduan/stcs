@@ -1,11 +1,16 @@
 package org.stcs.server.protocol;
 
 
+import static org.stcs.server.constant.GlobalConstant.ERROR_1005;
 import static org.stcs.server.constant.GlobalConstant.SUCCESS_CODE;
 
 import java.util.Collection;
 
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import org.stcs.server.common.Pagination;
+import org.stcs.server.exception.STCSException;
+import org.stcs.server.exception.STCSExceptionEntity;
 import org.stcs.server.utils.KeyUtils;
 
 public final class STCSProtocolBuilder {
@@ -68,4 +73,23 @@ public final class STCSProtocolBuilder {
         return resp;
     }
 
+    public static <T> JSONObject buildResponsePagination(Pagination<T> p) {
+        final JSONObject resp = (JSONObject) JSON.toJSON(p);
+        resp.put("code", SUCCESS_CODE);
+//        resp.put("total", p.getTotal());
+//        resp.put("total", p.);
+//        resp.put("records", p.getRecords());
+        return resp;
+    }
+
+    public static <T> void checkNotFoundException(T t) throws STCSException {
+        if (t == null) {
+            STCSExceptionEntity exceptionEntity = STCSExceptionEntity.builder()
+                    .code(ERROR_1005)
+                    .reason("not found the record")
+                    .description("not found the record")
+                    .build();
+            throw new STCSException(exceptionEntity);
+        }
+    }
 }
