@@ -6,7 +6,7 @@ public enum ResultType {
     CUSTOMER_ADD_FAILURE("1001", "customer add failure"),
     CUSTOMER_DELETE_FAILURE("1002", "customer delete failure"),
     CUSTOMER_UPDATE_FAILURE("1003", "customer update failure"),
-    CUSTOMER_NOT_FOUND("1005", "customer not found");
+    CUSTOMER_NOT_FOUND("1005", "not found the record");
 
     private final String code;
     private final String info;
