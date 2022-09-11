@@ -1,7 +1,5 @@
 package org.stcs.server.service;
 
-import static org.stcs.server.protocol.STCSProtocolBuilder.checkNotFoundException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,7 +18,7 @@ import org.stcs.server.mapper.CustomerMapper;
 
 @Service
 @Slf4j
-public class CustomerService {
+public class CustomerService extends AbstractService {
     private final CustomerDao customerDao;
 
     public CustomerService(CustomerDao customerDao) {

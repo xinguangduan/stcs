@@ -16,7 +16,7 @@ import org.stcs.server.mapper.PartMapper;
 
 @Service
 @Slf4j
-public class PartService {
+public class PartService extends AbstractService {
 
     private final PartDao partDao;
 

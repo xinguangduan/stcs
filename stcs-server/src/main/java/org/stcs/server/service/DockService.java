@@ -1,6 +1,5 @@
 package org.stcs.server.service;
 
-import static org.stcs.server.protocol.STCSProtocolBuilder.checkNotFoundException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +19,7 @@ import org.stcs.server.mapper.DockMapper;
 
 @Service
 @Slf4j
-public class DockService {
+public class DockService extends AbstractService {
 
     private final DockDao dockDao;
 

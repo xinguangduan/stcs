@@ -11,7 +11,7 @@ import org.stcs.server.entity.TransportStepEntity;
 
 @Service
 @Slf4j
-public class TransCalculationService {
+public class TransCalculationService extends AbstractService {
 
     private final TransControlCalculationEngine transControlCalculationEngine;
 
