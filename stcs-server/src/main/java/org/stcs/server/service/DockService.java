@@ -1,17 +1,22 @@
 package org.stcs.server.service;
 
+import static org.stcs.server.protocol.STCSProtocolBuilder.checkNotFoundException;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.dao.DockDao;
 import org.stcs.server.dto.DockDto;
 import org.stcs.server.entity.DockEntity;
+import org.stcs.server.exception.STCSException;
+import org.stcs.server.mapper.DockMapper;
 
 @Service
 @Slf4j
@@ -23,49 +28,46 @@ public class DockService {
         this.dockDao = dockDao;
     }
 
-    public DockEntity find(int dockId) {
-        DockEntity dockEntity = DockEntity.builder().build();
+    public DockEntity find(int dockId) throws STCSException {
         DockDto dockDto = dockDao.find(dockId);
-        if (dockDto == null) {
-            return null;
-        }
-        BeanUtils.copyProperties(dockDto, dockEntity, "_id");
+        checkNotFoundException(dockDto);
+        DockEntity dockEntity = new DockEntity();
+        DockMapper.converter.toEntity(dockDto, dockEntity);
         return dockEntity;
     }
 
     public List<DockEntity> findAll() {
         List<DockEntity> dockEntities = new ArrayList<>();
         List<DockDto> dockDtos = dockDao.findAll();
-        dockDtos.forEach(s -> {
-            DockEntity dockEntity = DockEntity.builder().build();
-            BeanUtils.copyProperties(s, dockEntity, "_id");
-            dockEntities.add(dockEntity);
-        });
+        DockMapper.converter.toEntity(dockDtos, dockEntities);
         return dockEntities;
     }
 
-    public long add(DockEntity dockEntity) {
+    public Pagination<DockEntity> find(Pagination pagination, DockEntity dockEntity) {
         DockDto dockDto = new DockDto();
-        BeanUtils.copyProperties(dockEntity, dockDto, "_id");
-        Collection<DockDto> resp = dockDao.insert(dockDto);
-        return resp.size();
+        DockMapper.converter.toDto(dockEntity, dockDto);
+
+        Pagination<DockDto> result = dockDao.find(pagination, dockDto);
+        Pagination<DockEntity> newPagination = new Pagination<>();
+        DockMapper.converter.toPageResult(result, newPagination);
+        return newPagination;
+    }
+
+    public long add(DockEntity dockEntity) {
+        return add(Arrays.asList(dockEntity));
     }
 
     public long add(List<DockEntity> dockEntities) {
-        final List<DockDto> dockDtos = new ArrayList<>();
-        dockEntities.forEach(s -> {
-            DockDto dockDto = new DockDto();
-            BeanUtils.copyProperties(s, dockDto);
-            dockDtos.add(dockDto);
-        });
-        Collection<DockDto> resp = dockDao.insert(dockDtos);
-        log.info("add result {}", resp);
-        return resp.size();
+        final List<DockDto> dockDtoList = new ArrayList<>();
+        DockMapper.converter.toDto(dockEntities, dockDtoList);
+        Collection<DockDto> result = dockDao.insert(dockDtoList);
+        log.info("add result {}", result);
+        return result.size();
     }
 
     public long update(DockEntity dockEntity) {
         DockDto dockDto = new DockDto();
-        BeanUtils.copyProperties(dockEntity, dockDto);
+        DockMapper.converter.toDto(dockEntity, dockDto);
         UpdateResult result = dockDao.update(dockDto);
         log.info("update result {}, {}", result, dockEntity);
         return result.getModifiedCount();

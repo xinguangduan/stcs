@@ -14,37 +14,44 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.dto.MaterialSpecDto;
 
 @Slf4j
 @Service
-public class MaterialSpecDao {
+public class MaterialSpecDao extends AbstractDao<MaterialSpecDto> {
 
     private final MongoTemplate mongoTemplate;
 
     @Autowired
     public MaterialSpecDao(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+        super.setMongoTemplate(mongoTemplate);
     }
 
+    private static Query buildQuery(MaterialSpecDto materialSpecDto) {
+        if (materialSpecDto.getMaterialId() == 0) {
+            return new Query();
+        }
+        return new Query().addCriteria(new Criteria("materialDesc").regex(".*?" + materialSpecDto.getMaterialDesc() + ".*?"));
+    }
+
+    private static Query buildUniqueQuery(int materialId) {
+        return new Query().addCriteria(new Criteria("materialId").is(materialId));
+    }
 
     public MaterialSpecDto find(int materialId) {
         Query query = buildUniqueQuery(materialId);
-        final long begin = System.currentTimeMillis();
-        MaterialSpecDto res = mongoTemplate.findOne(query, MaterialSpecDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("find material spec info, materialId:{}, find result:{}, cost(ms):{}", materialId, res, (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findOne(query, MaterialSpecDto.class);
     }
 
     public List<MaterialSpecDto> findAll() {
-        final long begin = System.currentTimeMillis();
-        List<MaterialSpecDto> res = mongoTemplate.findAll(MaterialSpecDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("find all material spec info, find result:{}, cost(ms):{}", res.size(), (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findAll(MaterialSpecDto.class);
+    }
+
+    public Pagination<MaterialSpecDto> find(Pagination pagination, MaterialSpecDto materialSpecDto) {
+        Query query = buildQuery(materialSpecDto);
+        return pagination(MaterialSpecDto.class, pagination.getPageSize(), pagination.getPageNum(), query);
     }
 
     public Collection<MaterialSpecDto> insert(MaterialSpecDto materialSpecDto) {
@@ -71,10 +78,6 @@ public class MaterialSpecDao {
     public DeleteResult delete(int materialId) {
         Query query = buildUniqueQuery(materialId);
         return mongoTemplate.remove(query, MaterialSpecDto.class);
-    }
-
-    private static Query buildUniqueQuery(int materialId) {
-        return new Query().addCriteria(new Criteria("materialId").is(materialId));
     }
 }
 

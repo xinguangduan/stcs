@@ -13,44 +13,40 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.dto.DockDto;
 
 @Slf4j
 @Service
-public class DockDao {
+public class DockDao extends AbstractDao<DockDto> {
     private final MongoTemplate mongoTemplate;
 
     @Autowired
     public DockDao(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+        super.setMongoTemplate(mongoTemplate);
     }
-
 
     public DockDto find(int dockId) {
         final Query query = buildUniqueQuery(dockId);
-        final long begin = System.currentTimeMillis();
-        DockDto res = mongoTemplate.findOne(query, DockDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("dockId:{}, find result:{}, cost(ms):{}", dockId, res, (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findOne(query, DockDto.class);
     }
 
     public List<DockDto> findAll() {
-        final long begin = System.currentTimeMillis();
-        List<DockDto> res = mongoTemplate.findAll(DockDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("find all dock info, find result:{}, cost(ms):{}", res.size(), (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findAll(DockDto.class);
+    }
+
+    public Pagination<DockDto> find(Pagination pagination, DockDto dockDto) {
+        Query query = buildQuery(dockDto);
+        return pagination(DockDto.class, pagination.getPageSize(), pagination.getPageNum(), query);
     }
 
     public Collection<DockDto> insert(DockDto dockDto) {
         return insert(Arrays.asList(dockDto));
     }
 
-    public Collection<DockDto> insert(List<DockDto> partList) {
-        return mongoTemplate.insertAll(partList);
+    public Collection<DockDto> insert(List<DockDto> dockDtoList) {
+        return mongoTemplate.insertAll(dockDtoList);
     }
 
     public UpdateResult update(DockDto dockDto) {
@@ -65,7 +61,14 @@ public class DockDao {
         return mongoTemplate.remove(query, DockDto.class);
     }
 
-    private static Query buildUniqueQuery(int dockId) {
+    private Query buildQuery(DockDto dockDto) {
+        if (dockDto.getDockId() == 0) {
+            return new Query();
+        }
+        return new Query().addCriteria(new Criteria("dockDesc").regex((".*?" + dockDto.getDockDesc() + ".*?")));
+    }
+
+    private Query buildUniqueQuery(int dockId) {
         return new Query().addCriteria(new Criteria("dockId").is(dockId));
     }
 }

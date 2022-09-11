@@ -13,35 +13,49 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.dto.PartDto;
 
 @Slf4j
 @Service
-public class PartDao {
+public class PartDao extends AbstractDao<PartDto> {
     private final MongoTemplate mongoTemplate;
 
     @Autowired
     public PartDao(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+        super.setMongoTemplate(mongoTemplate);
     }
 
+    private static Query buildQuery(PartDto part) {
+        if (part.getPartId() == 0) {
+            return new Query();
+        }
+        if (StringUtils.hasText(part.getPartDesc())) {
+            return new Query().addCriteria(new Criteria("partId").regex(".*?" + part.getPartDesc() + ".*?"));
+        }
+        return new Query();
+    }
+
+    private static Query buildUniqueQuery(int partId) {
+        return new Query().addCriteria(new Criteria("partId").is(partId));
+    }
+
+    @TakeTime
     public PartDto find(int partId) {
         Query query = buildUniqueQuery(partId);
-        final long begin = System.currentTimeMillis();
-        PartDto res = mongoTemplate.findOne(query, PartDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("partId:{}, find result:{}, cost(ms):{}", partId, res, (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findOne(query, PartDto.class);
+    }
+
+    public Pagination<PartDto> find(Pagination pagination, PartDto partDto) {
+        Query query = buildQuery(partDto);
+        return pagination(PartDto.class, pagination.getPageSize(), pagination.getPageNum(), query);
     }
 
     public List<PartDto> findAll() {
-        final long begin = System.currentTimeMillis();
-        List<PartDto> res = mongoTemplate.findAll(PartDto.class);
-        if (log.isDebugEnabled()) {
-            log.debug("find all part info, find result:{},cost(ms):{}", res.size(), (System.currentTimeMillis() - begin));
-        }
-        return res;
+        return mongoTemplate.findAll(PartDto.class);
     }
 
     public Collection<PartDto> insert(PartDto partDto) {
@@ -63,9 +77,5 @@ public class PartDao {
     public DeleteResult delete(int partId) {
         Query query = buildUniqueQuery(partId);
         return mongoTemplate.remove(query, PartDto.class);
-    }
-
-    private static Query buildUniqueQuery(int partId) {
-        return new Query().addCriteria(new Criteria("partId").is(partId));
     }
 }

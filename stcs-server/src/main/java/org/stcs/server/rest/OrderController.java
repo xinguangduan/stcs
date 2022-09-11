@@ -14,17 +14,17 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.entity.OrderEntity;
 import org.stcs.server.exception.STCSException;
-import org.stcs.server.exception.STCSExceptionEntity;
 import org.stcs.server.service.OrderService;
 import org.stcs.server.service.TransCalculationService;
-import org.stcs.server.utils.KeyUtils;
 
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/orders")
-public class OrderController extends AbstractRestController {
+public class OrderController extends AbstractController {
 
     private final OrderService orderService;
     private final TransCalculationService transCalculationService;
@@ -35,31 +35,33 @@ public class OrderController extends AbstractRestController {
         this.transCalculationService = transCalculationService;
     }
 
+    @TakeTime
     @GetMapping
     public ResponseEntity find() throws STCSException {
         JSONObject resp = null;
         final long beginTime = System.currentTimeMillis();
         receiveLog(null);
         preCheck(null);
-        try {
-            final List<OrderEntity> orderEntities = orderService.findAll();
-            return ResponseEntity.ok().body(buildResponseCollections(orderEntities));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            STCSExceptionEntity entity = STCSExceptionEntity.builder().code(ERROR_1000).reason("some thing fa").description(e.getMessage()).messageId(KeyUtils.generateMessageId()).build();
-            throw new STCSException(entity);
-        } finally {
-            costLog(beginTime, resp);
-        }
+        final List<OrderEntity> orderEntities = orderService.findAll();
+        return ResponseEntity.ok().body(buildResponseCollections(orderEntities));
     }
 
+    @TakeTime
     @GetMapping("/{orderId}")
-    public ResponseEntity findOne(@PathVariable int orderId) {
+    public ResponseEntity findOne(@PathVariable int orderId) throws STCSException {
         final OrderEntity orderEntity = orderService.find(orderId);
-        log.info("find result {}", orderEntity);
         return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(orderEntity)));
     }
 
+    @TakeTime
+    @GetMapping(value = "/{pageNum}/{pageSize}")
+    public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) OrderEntity orderEntity) {
+        Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
+        final Pagination<OrderEntity> partEntities = orderService.find(page, orderEntity);
+        return ResponseEntity.ok().body(buildResponsePagination(partEntities));
+    }
+
+    @TakeTime
     @PostMapping
     public ResponseEntity add(@RequestBody JSONObject req) {
         final OrderEntity orderEntity = JSON.to(OrderEntity.class, req);
@@ -72,8 +74,9 @@ public class OrderController extends AbstractRestController {
         return ResponseEntity.ok(res);
     }
 
+    @TakeTime
     @PutMapping("/{orderId}")
-    public ResponseEntity update(@RequestBody JSONObject req, @PathVariable int orderId) {
+    public ResponseEntity update(@RequestBody JSONObject req, @PathVariable int orderId) throws STCSException {
         final OrderEntity orderEntity = orderService.find(orderId);
         if (orderEntity == null) {
             return ResponseEntity.ok().body(buildFailure(ERROR_1005, "order not found"));
@@ -87,6 +90,7 @@ public class OrderController extends AbstractRestController {
         return ResponseEntity.ok().body(buildFailure(ERROR_1003, "update failure"));
     }
 
+    @TakeTime
     @DeleteMapping("/{orderId}")
     public ResponseEntity delete(@PathVariable int orderId) {
         long result = orderService.delete(orderId);
@@ -96,8 +100,9 @@ public class OrderController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1002, "delete failure"));
     }
 
+    @TakeTime
     @PostMapping("/{orderId}/start")
-    public ResponseEntity start(@PathVariable int orderId) {
+    public ResponseEntity start(@PathVariable int orderId) throws STCSException {
         log.info("start transportation ...");
         final OrderEntity orderEntity = orderService.find(orderId);
         if (orderEntity == null) {
