@@ -1,21 +1,25 @@
 package org.stcs.server.service;
 
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.dao.MaterialSpecDao;
 import org.stcs.server.dto.MaterialSpecDto;
 import org.stcs.server.entity.MaterialSpecEntity;
+import org.stcs.server.exception.STCSException;
+import org.stcs.server.mapper.MaterialSpecMapper;
 
 @Service
 @Slf4j
-public class MaterialSpecService {
+public class MaterialSpecService extends AbstractService {
 
     private final MaterialSpecDao materialSpecDao;
 
@@ -23,53 +27,54 @@ public class MaterialSpecService {
         this.materialSpecDao = materialSpecDao;
     }
 
-    public MaterialSpecEntity find(int materialId) {
-        MaterialSpecEntity materialSpecEntity = MaterialSpecEntity.builder().build();
+    public MaterialSpecEntity find(int materialId) throws STCSException {
         MaterialSpecDto materialSpecDto = materialSpecDao.find(materialId);
-        BeanUtils.copyProperties(materialSpecDto, materialSpecEntity, "_id");
+        checkNotFoundException(materialSpecDto);
+        MaterialSpecEntity materialSpecEntity = new MaterialSpecEntity();
+        MaterialSpecMapper.converter.toEntity(materialSpecDto, materialSpecEntity);
         return materialSpecEntity;
     }
 
     public List<MaterialSpecEntity> findAll() {
         List<MaterialSpecEntity> materialSpecEntities = new ArrayList<>();
         List<MaterialSpecDto> materialSpecDtos = materialSpecDao.findAll();
-        for (MaterialSpecDto materialSpecDto : materialSpecDtos) {
-            MaterialSpecEntity materialSpecEntity = MaterialSpecEntity.builder().build();
-            BeanUtils.copyProperties(materialSpecDto, materialSpecEntity, "_id");
-            materialSpecEntities.add(materialSpecEntity);
-        }
+        MaterialSpecMapper.converter.toEntity(materialSpecDtos, materialSpecEntities);
         return materialSpecEntities;
     }
 
-    public long add(MaterialSpecEntity materialSpecEntity) {
+    public Pagination<MaterialSpecEntity> find(Pagination pagination, MaterialSpecEntity materialSpecEntity) {
         MaterialSpecDto materialSpecDto = new MaterialSpecDto();
-        BeanUtils.copyProperties(materialSpecEntity, materialSpecDto, "_id");
-        Collection<MaterialSpecDto> resp = materialSpecDao.insert(materialSpecDto);
-        return resp.size();
+        MaterialSpecMapper.converter.toDto(materialSpecEntity, materialSpecDto);
+
+        Pagination<MaterialSpecDto> result = materialSpecDao.find(pagination, materialSpecDto);
+        Pagination<MaterialSpecEntity> newPagination = new Pagination<>();
+        MaterialSpecMapper.converter.toPageResult(result, newPagination);
+        return newPagination;
+    }
+
+    public long add(MaterialSpecEntity materialSpecEntity) {
+        return add(Arrays.asList(materialSpecEntity));
     }
 
     public long add(List<MaterialSpecEntity> materialSpecEntities) {
         final List<MaterialSpecDto> materialSpecDtos = new ArrayList<>();
-        materialSpecEntities.forEach(s -> {
-            MaterialSpecDto materialSpecDto = new MaterialSpecDto();
-            BeanUtils.copyProperties(s, materialSpecDto);
-            materialSpecDtos.add(materialSpecDto);
-        });
+        MaterialSpecMapper.converter.toDto(materialSpecEntities, materialSpecDtos);
         Collection<MaterialSpecDto> resp = materialSpecDao.insert(materialSpecDtos);
-        log.info("add result {}", resp);
+        log.info("add result {}, {}", resp, materialSpecEntities);
         return resp.size();
     }
 
     public long update(MaterialSpecEntity materialSpecEntity) {
         MaterialSpecDto materialSpecDto = new MaterialSpecDto();
-        BeanUtils.copyProperties(materialSpecEntity, materialSpecDto);
+        MaterialSpecMapper.converter.toDto(materialSpecEntity, materialSpecDto);
         UpdateResult result = materialSpecDao.update(materialSpecDto);
         log.info("update result {}, {}", result, materialSpecEntity);
         return result.getModifiedCount();
     }
 
-    public long delete(int materialId) {
+    public long delete(int materialId) throws STCSException {
         final DeleteResult result = materialSpecDao.delete(materialId);
+        checkNotFoundException(result);
         log.info("delete result {}, materialId:{}", result, materialId);
         return result.getDeletedCount();
     }

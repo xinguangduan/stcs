@@ -7,17 +7,22 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.stcs.server.annotation.LatencyTime;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.entity.DockEntity;
+import org.stcs.server.exception.STCSException;
 import org.stcs.server.service.DockService;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/v1/docks")
-public class DockController extends AbstractRestController {
+@SecurityRequirement(name = "stcs")
+@RequestMapping("/api/v1/docks")
+public class DockController extends AbstractController {
 
     private final DockService dockService;
 
@@ -26,23 +31,33 @@ public class DockController extends AbstractRestController {
         this.dockService = dockService;
     }
 
+    @LatencyTime
     @GetMapping
-    public ResponseEntity find(@RequestBody String req) {
+    public ResponseEntity find() {
         final List<DockEntity> dockEntities = dockService.findAll();
         log.info("find result {}", dockEntities);
         return ResponseEntity.ok().body(buildResponseCollections(dockEntities));
     }
 
-    @GetMapping(value = "/{dockId}")
-    public ResponseEntity findOne(@PathVariable int dockId) {
+    @LatencyTime
+    @GetMapping("/{dockId}")
+    public ResponseEntity findOne(@PathVariable int dockId) throws STCSException {
         final DockEntity dockEntity = dockService.find(dockId);
         if (dockEntity == null) {
             return ResponseEntity.ok().body(buildFailure(ERROR_1005, "dock not found"));
         }
-        log.info("find result {}", dockEntity);
         return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(dockEntity)));
     }
 
+    @LatencyTime
+    @GetMapping(value = "/{pageNum}/{pageSize}")
+    public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) DockEntity dockEntity) {
+        Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
+        final Pagination<DockEntity> partEntities = dockService.find(page, dockEntity);
+        return ResponseEntity.ok().body(buildResponsePagination(partEntities));
+    }
+
+    @LatencyTime
     @PostMapping
     public ResponseEntity add(@RequestBody String req) {
         final List<DockEntity> dockEntities = JSON.parseArray(req, DockEntity.class);
@@ -53,22 +68,23 @@ public class DockController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
     }
 
-    @PutMapping(value = "/{dockId}")
-    public ResponseEntity update(@RequestBody String req, @PathVariable int dockId) {
+    @LatencyTime
+    @PutMapping("/{dockId}")
+    public ResponseEntity update(@RequestBody String req, @PathVariable int dockId) throws STCSException {
         final DockEntity dockEntity = dockService.find(dockId);
         if (dockEntity == null) {
             return ResponseEntity.ok().body(buildFailure(ERROR_1005, "dock not found"));
         }
         final DockEntity newDockEntity = JSON.to(DockEntity.class, req);
         long res = dockService.update(newDockEntity);
-        log.info("updated result {}, dockId {}", res, dockId);
         if (res > 0) {
             return ResponseEntity.ok().body(buildSuccess("update success."));
         }
         return ResponseEntity.ok().body(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @DeleteMapping(value = "/{dockId}")
+    @LatencyTime
+    @DeleteMapping("/{dockId}")
     public ResponseEntity delete(@PathVariable int dockId) {
         long result = dockService.delete(dockId);
         log.info("delete count {}, dockId {}", result, dockId);

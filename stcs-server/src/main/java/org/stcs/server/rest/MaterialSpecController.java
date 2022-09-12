@@ -8,17 +8,22 @@ import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.stcs.server.annotation.LatencyTime;
+import org.stcs.server.common.Pagination;
 import org.stcs.server.entity.MaterialSpecEntity;
+import org.stcs.server.exception.STCSException;
 import org.stcs.server.service.MaterialSpecService;
 
 @RestController
 @Slf4j
-@RequestMapping(value = "api/v1/materials")
-public class MaterialSpecController extends AbstractRestController {
+@SecurityRequirement(name = "stcs")
+@RequestMapping("/api/v1/materials")
+public class MaterialSpecController extends AbstractController {
 
     private final MaterialSpecService materialSpecService;
 
@@ -27,22 +32,31 @@ public class MaterialSpecController extends AbstractRestController {
         this.materialSpecService = materialSpecService;
     }
 
+    @LatencyTime
     @GetMapping
-    public ResponseEntity<JSONObject> find() {
+    public ResponseEntity find() {
         final List<MaterialSpecEntity> materialSpecEntities = materialSpecService.findAll();
-        log.info("find result {}", materialSpecEntities);
         JSONObject resp = buildResponseCollections(materialSpecEntities);
         return ResponseEntity.ok().body(resp);
     }
 
-    @GetMapping(value = "/{materialId}")
-    public ResponseEntity<JSONObject> find(@PathVariable int materialId) {
+    @LatencyTime
+    @GetMapping("/{materialId}")
+    public ResponseEntity find(@PathVariable int materialId) throws STCSException {
         final MaterialSpecEntity materialSpecEntity = materialSpecService.find(materialId);
-        log.info("find result {}", materialSpecEntity);
         JSONObject resp = buildResponseCollections(Arrays.asList(materialSpecEntity));
         return ResponseEntity.ok().body(resp);
     }
 
+    @LatencyTime
+    @GetMapping(value = "/{pageNum}/{pageSize}")
+    public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) MaterialSpecEntity materialSpecEntity) {
+        Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
+        final Pagination<MaterialSpecEntity> partEntities = materialSpecService.find(page, materialSpecEntity);
+        return ResponseEntity.ok().body(buildResponsePagination(partEntities));
+    }
+
+    @LatencyTime
     @PostMapping
     public ResponseEntity add(@RequestBody String req) {
         List<MaterialSpecEntity> materialSpecEntities = JSON.parseArray(req, MaterialSpecEntity.class);
@@ -53,8 +67,9 @@ public class MaterialSpecController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
     }
 
-    @PutMapping(value = "/{materialId}")
-    public ResponseEntity update(@RequestBody String req, @PathVariable int materialId) {
+    @LatencyTime
+    @PutMapping("/{materialId}")
+    public ResponseEntity update(@RequestBody String req, @PathVariable int materialId) throws STCSException {
         final MaterialSpecEntity oldMaterialSpecEntity = materialSpecService.find(materialId);
         if (oldMaterialSpecEntity == null) {
             return ResponseEntity.ok().body(buildFailure(ERROR_1005, "not found the material spec"));
@@ -67,8 +82,9 @@ public class MaterialSpecController extends AbstractRestController {
         return ResponseEntity.ok(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @DeleteMapping(value = "/{materialId}")
-    public ResponseEntity delete(@PathVariable int materialId) {
+    @LatencyTime
+    @DeleteMapping("/{materialId}")
+    public ResponseEntity delete(@PathVariable int materialId) throws STCSException {
         long result = materialSpecService.delete(materialId);
         if (result > 0) {
             return ResponseEntity.ok(buildSuccess("delete success"));

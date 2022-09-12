@@ -1,13 +1,18 @@
-  version: v1
-  server:
-    port: 8899
-    timeout: 5
-    servlet:
-      context-path: /stcs
-  spring:
-    jackson:
-      time-zone: GMT+8
-      date-format: yyyy-MM-dd HH:mm:ss
-    data:
-      mongodb:
-        uri: mongodb://localhost:27017/stcs
+version: v1
+server:
+  port: 8899
+  timeout: 5
+  servlet:
+    context-path: /stcs
+spring:
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/stcs
+  security:
+    enabled: true
+    user:
+      name: stcs
+      password: stcs

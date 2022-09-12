@@ -2,10 +2,14 @@ package org.stcs.server.entity;
 
 import java.util.List;
 
-import lombok.Data;
+import lombok.*;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
 public class OrderEntity {
     private int orderId;
     private String orderDesc;

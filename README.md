@@ -1,2 +1,2 @@
-# stcs
-Smart Transportation Control System
+# STCS
+### Smart Transportation Control System
