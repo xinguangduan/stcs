@@ -16,23 +16,23 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Slf4j
 @Aspect
 @Component
-public class TakeTimeAspect {
+public class LatencyTimeAspect {
     // 统计请求的处理时间
     ThreadLocal<Long> startTime = new ThreadLocal<>();
     ThreadLocal<Long> endTime = new ThreadLocal<>();
 
     /**
-     * 带有@TakeTime注解的方法
+     * 带有@LatencyTime注解的方法
      */
-//    @Pointcut("within(com.lwx.backend.user.controller.*)")
-//    @Pointcut("execution(* com.lwx.backend.user.controller.*.*(..))")
-    @Pointcut("@annotation(org.stcs.server.annotation.TakeTime)")
-    public void TakeTime() {
+//    @Pointcut("within(org.stcs.server.rest.*)")
+//    @Pointcut("execution(* org.stcs.server.rest.*.*(..))")
+    @Pointcut("@annotation(org.stcs.server.annotation.LatencyTime)")
+    public void LatencyTime() {
 
     }
 
-    //    @Before("within(com.lwx.backend.user.controller.*)")
-    @Before("TakeTime()")
+    //    @Before("within(org.stcs.server.rest.*)")
+    @Before("LatencyTime()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
         // 获取方法的名称
         String methodName = joinPoint.getSignature().getName();
@@ -49,14 +49,14 @@ public class TakeTimeAspect {
         HttpServletRequest request = attributes.getRequest();
 
         //记录请求的内容
-        log.info("access [{}] method, url:{}, METHOD: {}", methodName, request.getRequestURL().toString(), request.getMethod());
+        log.info("access [{}], full path:{}, METHOD: {}", methodName, request.getRequestURL().toString(), request.getMethod());
     }
 
     //    @AfterReturning(returning = "ret", pointcut = "within(com.lwx.backend.user.controller.*)")
-    @AfterReturning(returning = "ret", pointcut = "TakeTime()")
+    @AfterReturning(returning = "ret", pointcut = "LatencyTime()")
     public void doAfterReturning(Object ret) {
         //处理完请求后，返回内容
         endTime.set(System.currentTimeMillis());
-        log.info("cost time(ms):{}, return:{}", (endTime.get() - startTime.get()), JSON.toJSONString(ret));
+        log.info("cost(ms):{}, return:{}", (endTime.get() - startTime.get()), JSON.toJSONString(ret));
     }
 }

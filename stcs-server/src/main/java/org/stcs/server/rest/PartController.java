@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.annotation.LatencyTime;
 import org.stcs.server.common.Pagination;
 import org.stcs.server.entity.PartEntity;
 import org.stcs.server.mapper.PartMapper;
@@ -48,7 +48,7 @@ public class PartController extends AbstractController {
             @ApiResponse(responseCode = "500", description = "Server Internal Error",
                     content = @Content)
     })
-    @TakeTime
+    @LatencyTime
     @GetMapping
     public ResponseEntity find() {
         final List<PartEntity> partEntities = partService.findAll();
@@ -65,7 +65,7 @@ public class PartController extends AbstractController {
             @ApiResponse(responseCode = "404", description = "Part not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Server Internal Error")})
-    @TakeTime
+    @LatencyTime
     @GetMapping(value = "/{partId}")
     public ResponseEntity findOne(@PathVariable int partId) {
         final PartEntity partEntity = partService.find(partId);
@@ -82,7 +82,7 @@ public class PartController extends AbstractController {
             @ApiResponse(responseCode = "404", description = "Parts not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Server Internal Error")})
-    @TakeTime
+    @LatencyTime
     @GetMapping(value = "/{pageNum}/{pageSize}")
     public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) PartEntity part) {
         Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
@@ -98,7 +98,7 @@ public class PartController extends AbstractController {
             @ApiResponse(responseCode = "400", description = "Invalid parts supplied",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Server Internal Error")})
-    @TakeTime
+    @LatencyTime
     @PostMapping
     public ResponseEntity add(@RequestBody String req) {
         final List<PartEntity> partEntities = JSON.parseArray(req, PartEntity.class);
@@ -119,7 +119,7 @@ public class PartController extends AbstractController {
             @ApiResponse(responseCode = "400", description = "Invalid parts supplied",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Server Internal Error")})
-    @TakeTime
+    @LatencyTime
     @PutMapping(value = "/{partId}")
     public ResponseEntity update(@RequestBody String req, @PathVariable int partId) {
         final PartEntity partEntity = partService.find(partId);
@@ -144,7 +144,7 @@ public class PartController extends AbstractController {
             @ApiResponse(responseCode = "400", description = "Invalid parts supplied",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Server Internal Error")})
-    @TakeTime
+    @LatencyTime
     @DeleteMapping(value = "/{partId}")
     public ResponseEntity delete(@PathVariable int partId) {
         long result = partService.delete(partId);

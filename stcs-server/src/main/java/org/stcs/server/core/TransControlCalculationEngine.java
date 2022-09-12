@@ -4,29 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.stcs.server.entity.TransportPlanEntity;
-import org.stcs.server.entity.TransportStepEntity;
+import org.stcs.server.entity.TransPlanEntity;
+import org.stcs.server.entity.TransStepEntity;
 import org.stcs.server.utils.KeyUtils;
 
 @Service
 public class TransControlCalculationEngine {
 
-    public List<TransportStepEntity> calculate(TransportPlanEntity transportPlanEntity) {
-        final List<TransportStepEntity> steps = new ArrayList<>();
+    public List<TransStepEntity> calculate(TransPlanEntity transPlanEntity) {
+        final List<TransStepEntity> steps = new ArrayList<>();
         // mock some data
-        TransportStepEntity step1 = new TransportStepEntity();
+        TransStepEntity step1 = new TransStepEntity();
         step1.setStepId(KeyUtils.generateUID());
         step1.setSequence(1);
         step1.setStepName("传送带1");
         steps.add(step1);
 
-        TransportStepEntity step2 = new TransportStepEntity();
+        TransStepEntity step2 = new TransStepEntity();
         step2.setStepId(KeyUtils.generateUID());
         step2.setSequence(2);
         step2.setStepName("传送带2");
         steps.add(step2);
 
-        TransportStepEntity step3 = new TransportStepEntity();
+        TransStepEntity step3 = new TransStepEntity();
         step3.setStepId(KeyUtils.generateUID());
         step3.setSequence(3);
         step3.setStepName("传送带3");

@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TransportPlanEntity {
+public class TransPlanEntity {
     private int planId;
     private int custId;
     private int orderId;

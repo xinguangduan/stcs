@@ -5,7 +5,7 @@ import lombok.ToString;
 
 @Data
 @ToString
-public class TransportStepEntity {
+public class TransStepEntity {
     private String stepId;
     private int sequence;
     private String stepName;

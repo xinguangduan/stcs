@@ -15,7 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.annotation.LatencyTime;
 import org.stcs.server.common.Pagination;
 import org.stcs.server.entity.OrderEntity;
 import org.stcs.server.exception.STCSException;
@@ -37,7 +37,7 @@ public class OrderController extends AbstractController {
         this.transCalculationService = transCalculationService;
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping
     public ResponseEntity find() throws STCSException {
         JSONObject resp = null;
@@ -48,14 +48,14 @@ public class OrderController extends AbstractController {
         return ResponseEntity.ok().body(buildResponseCollections(orderEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping("/{orderId}")
     public ResponseEntity findOne(@PathVariable int orderId) throws STCSException {
         final OrderEntity orderEntity = orderService.find(orderId);
         return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(orderEntity)));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping(value = "/{pageNum}/{pageSize}")
     public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) OrderEntity orderEntity) {
         Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
@@ -63,7 +63,7 @@ public class OrderController extends AbstractController {
         return ResponseEntity.ok().body(buildResponsePagination(partEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @PostMapping
     public ResponseEntity add(@RequestBody JSONObject req) {
         final OrderEntity orderEntity = JSON.to(OrderEntity.class, req);
@@ -76,7 +76,7 @@ public class OrderController extends AbstractController {
         return ResponseEntity.ok(res);
     }
 
-    @TakeTime
+    @LatencyTime
     @PutMapping("/{orderId}")
     public ResponseEntity update(@RequestBody JSONObject req, @PathVariable int orderId) throws STCSException {
         final OrderEntity orderEntity = orderService.find(orderId);
@@ -92,7 +92,7 @@ public class OrderController extends AbstractController {
         return ResponseEntity.ok().body(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @TakeTime
+    @LatencyTime
     @DeleteMapping("/{orderId}")
     public ResponseEntity delete(@PathVariable int orderId) {
         long result = orderService.delete(orderId);
@@ -102,7 +102,7 @@ public class OrderController extends AbstractController {
         return ResponseEntity.ok(buildFailure(ERROR_1002, "delete failure"));
     }
 
-    @TakeTime
+    @LatencyTime
     @PostMapping("/{orderId}/start")
     public ResponseEntity start(@PathVariable int orderId) throws STCSException {
         log.info("start transportation ...");
