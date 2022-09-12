@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.annotation.LatencyTime;
 import org.stcs.server.common.Pagination;
 import org.stcs.server.entity.DockEntity;
 import org.stcs.server.exception.STCSException;
@@ -31,7 +31,7 @@ public class DockController extends AbstractController {
         this.dockService = dockService;
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping
     public ResponseEntity find() {
         final List<DockEntity> dockEntities = dockService.findAll();
@@ -39,7 +39,7 @@ public class DockController extends AbstractController {
         return ResponseEntity.ok().body(buildResponseCollections(dockEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping("/{dockId}")
     public ResponseEntity findOne(@PathVariable int dockId) throws STCSException {
         final DockEntity dockEntity = dockService.find(dockId);
@@ -49,7 +49,7 @@ public class DockController extends AbstractController {
         return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(dockEntity)));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping(value = "/{pageNum}/{pageSize}")
     public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) DockEntity dockEntity) {
         Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
@@ -57,7 +57,7 @@ public class DockController extends AbstractController {
         return ResponseEntity.ok().body(buildResponsePagination(partEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @PostMapping
     public ResponseEntity add(@RequestBody String req) {
         final List<DockEntity> dockEntities = JSON.parseArray(req, DockEntity.class);
@@ -68,7 +68,7 @@ public class DockController extends AbstractController {
         return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
     }
 
-    @TakeTime
+    @LatencyTime
     @PutMapping("/{dockId}")
     public ResponseEntity update(@RequestBody String req, @PathVariable int dockId) throws STCSException {
         final DockEntity dockEntity = dockService.find(dockId);
@@ -83,7 +83,7 @@ public class DockController extends AbstractController {
         return ResponseEntity.ok().body(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @TakeTime
+    @LatencyTime
     @DeleteMapping("/{dockId}")
     public ResponseEntity delete(@PathVariable int dockId) {
         long result = dockService.delete(dockId);

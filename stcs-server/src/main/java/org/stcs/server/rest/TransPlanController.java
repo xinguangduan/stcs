@@ -14,51 +14,51 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.annotation.LatencyTime;
 import org.stcs.server.common.Pagination;
-import org.stcs.server.entity.TransportPlanEntity;
+import org.stcs.server.entity.TransPlanEntity;
 import org.stcs.server.exception.STCSException;
-import org.stcs.server.service.TransportPlanService;
+import org.stcs.server.service.TransPlanService;
 
 @RestController
 @Slf4j
 @SecurityRequirement(name = "stcs")
 @RequestMapping("/api/v1/transplans")
-public class TransportPlanController extends AbstractController {
+public class TransPlanController extends AbstractController {
 
-    private final TransportPlanService planService;
+    private final TransPlanService planService;
 
     @Autowired
-    public TransportPlanController(TransportPlanService planService) {
+    public TransPlanController(TransPlanService planService) {
         this.planService = planService;
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping
     public ResponseEntity find() {
-        final List<TransportPlanEntity> planEntities = planService.findAll();
+        final List<TransPlanEntity> planEntities = planService.findAll();
         return ResponseEntity.ok().body(buildResponseCollections(planEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping(value = "/{planId}")
     public ResponseEntity findOne(@PathVariable int planId) throws STCSException {
-        final TransportPlanEntity planEntity = planService.find(planId);
+        final TransPlanEntity planEntity = planService.find(planId);
         return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(planEntity)));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping(value = "/{pageNum}/{pageSize}")
-    public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) TransportPlanEntity part) {
+    public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) TransPlanEntity part) {
         Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
-        final Pagination<TransportPlanEntity> partEntities = planService.find(page, part);
+        final Pagination<TransPlanEntity> partEntities = planService.find(page, part);
         return ResponseEntity.ok().body(buildResponsePagination(partEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @PostMapping
     public ResponseEntity add(@RequestBody String req) {
-        final List<TransportPlanEntity> planEntities = JSON.parseArray(req, TransportPlanEntity.class);
+        final List<TransPlanEntity> planEntities = JSON.parseArray(req, TransPlanEntity.class);
         long result = planService.add(planEntities);
         JSONObject res = buildSuccess("add success");
         if (result <= 0) {
@@ -68,14 +68,14 @@ public class TransportPlanController extends AbstractController {
         return ResponseEntity.ok(res);
     }
 
-    @TakeTime
+    @LatencyTime
     @PutMapping(value = "/{planId}")
     public ResponseEntity update(@RequestBody String req, @PathVariable int planId) throws STCSException {
-        final TransportPlanEntity planEntity = planService.find(planId);
+        final TransPlanEntity planEntity = planService.find(planId);
         if (planEntity == null) {
             return ResponseEntity.ok().body(buildFailure(ERROR_1005, "order not found"));
         }
-        final TransportPlanEntity newPlanEntity = JSON.to(TransportPlanEntity.class, req);
+        final TransPlanEntity newPlanEntity = JSON.to(TransPlanEntity.class, req);
         BeanUtils.copyProperties(newPlanEntity, planEntity);
         long result = planService.update(planEntity);
         JSONObject resp = buildSuccess("update success");
@@ -85,7 +85,7 @@ public class TransportPlanController extends AbstractController {
         return ResponseEntity.ok().body(resp);
     }
 
-    @TakeTime
+    @LatencyTime
     @DeleteMapping(value = "/{planId}")
     public ResponseEntity delete(@PathVariable int planId) {
         long result = planService.delete(planId);

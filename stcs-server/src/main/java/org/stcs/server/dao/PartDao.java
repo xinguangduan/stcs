@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.annotation.LatencyTime;
 import org.stcs.server.common.Pagination;
 import org.stcs.server.dto.PartDto;
 
@@ -43,7 +43,7 @@ public class PartDao extends AbstractDao<PartDto> {
         return new Query().addCriteria(new Criteria("partId").is(partId));
     }
 
-    @TakeTime
+    @LatencyTime
     public PartDto find(int partId) {
         Query query = buildUniqueQuery(partId);
         return mongoTemplate.findOne(query, PartDto.class);

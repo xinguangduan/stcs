@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.stcs.server.annotation.TakeTime;
+import org.stcs.server.annotation.LatencyTime;
 import org.stcs.server.common.Pagination;
 import org.stcs.server.entity.CustomerEntity;
 import org.stcs.server.exception.STCSException;
@@ -32,21 +32,21 @@ public class CustomerController extends AbstractController {
         this.customerService = custInfoService;
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping
     public ResponseEntity find() {
         final List<CustomerEntity> customerEntities = customerService.findAll();
         return ResponseEntity.ok().body(buildResponseCollections(customerEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping("/{custId}")
     public ResponseEntity findOne(@PathVariable int custId) throws STCSException {
         final CustomerEntity customerEntity = customerService.find(custId);
         return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(customerEntity)));
     }
 
-    @TakeTime
+    @LatencyTime
     @GetMapping(value = "/{pageNum}/{pageSize}")
     public ResponseEntity find(@PathVariable int pageNum, @PathVariable int pageSize, @RequestBody(required = false) CustomerEntity customerEntity) {
         Pagination page = Pagination.builder().pageNum(pageNum).pageSize(pageSize).build();
@@ -54,7 +54,7 @@ public class CustomerController extends AbstractController {
         return ResponseEntity.ok().body(buildResponsePagination(partEntities));
     }
 
-    @TakeTime
+    @LatencyTime
     @PostMapping
     public ResponseEntity add(@RequestBody String req) {
         final List<CustomerEntity> customerEntities = JSON.parseArray(req, CustomerEntity.class);
@@ -65,7 +65,7 @@ public class CustomerController extends AbstractController {
         return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
     }
 
-    @TakeTime
+    @LatencyTime
     @PutMapping("/{custId}")
     public ResponseEntity update(@RequestBody JSONObject req, @PathVariable int custId) throws STCSException {
         final CustomerEntity customerEntity = customerService.find(custId);
@@ -80,7 +80,7 @@ public class CustomerController extends AbstractController {
         return ResponseEntity.ok(buildFailure(ERROR_1003, "update failure"));
     }
 
-    @TakeTime
+    @LatencyTime
     @DeleteMapping("/{custId}")
     public ResponseEntity delete(@PathVariable int custId) {
         long result = customerService.delete(custId);

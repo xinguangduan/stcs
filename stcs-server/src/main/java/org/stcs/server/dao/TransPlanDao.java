@@ -14,15 +14,15 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.stcs.server.common.Pagination;
-import org.stcs.server.dto.TransportPlanDto;
+import org.stcs.server.dto.TransPlanDto;
 
 @Slf4j
 @Service
-public class TransportPlanDao extends AbstractDao<TransportPlanDto> {
+public class TransPlanDao extends AbstractDao<TransPlanDto> {
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public TransportPlanDao(MongoTemplate mongoTemplate) {
+    public TransPlanDao(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
         super.setMongoTemplate(mongoTemplate);
     }
@@ -31,7 +31,7 @@ public class TransportPlanDao extends AbstractDao<TransportPlanDto> {
         return new Query().addCriteria(new Criteria("planId").is(planId));
     }
 
-    private static Query buildQuery(TransportPlanDto planDto) {
+    private static Query buildQuery(TransPlanDto planDto) {
         Criteria criteria = new Criteria();
         if (planDto.getPlanId() > 0) {
             criteria.and("planId").is(planDto.getPlanId());
@@ -48,45 +48,46 @@ public class TransportPlanDao extends AbstractDao<TransportPlanDto> {
         return new Query().addCriteria(criteria);
     }
 
-    public TransportPlanDto find(int planId) {
+    public TransPlanDto find(int planId) {
         Query query = buildUniqueQuery(planId);
-        TransportPlanDto res = mongoTemplate.findOne(query, TransportPlanDto.class);
+        TransPlanDto res = mongoTemplate.findOne(query, TransPlanDto.class);
         return res;
     }
 
-    public List<TransportPlanDto> findAll() {
-        return mongoTemplate.findAll(TransportPlanDto.class);
+    public List<TransPlanDto> findAll() {
+        return mongoTemplate.findAll(TransPlanDto.class);
     }
 
-    public List<TransportPlanDto> find(TransportPlanDto planDto) {
+    public List<TransPlanDto> find(TransPlanDto planDto) {
         Query query = buildQuery(planDto);
-        return mongoTemplate.find(query, TransportPlanDto.class);
+        return mongoTemplate.find(query, TransPlanDto.class);
     }
 
-    public Pagination<TransportPlanDto> find(Pagination pagination, TransportPlanDto planDto) {
+    public Pagination<TransPlanDto> find(Pagination pagination, TransPlanDto planDto) {
         Query query = buildQuery(planDto);
-        return pagination(TransportPlanDto.class, pagination.getPageSize(), pagination.getPageNum(), query);
+        return pagination(TransPlanDto.class, pagination.getPageSize(), pagination.getPageNum(), query);
     }
 
-    public Collection<TransportPlanDto> insert(TransportPlanDto transportPlanDto) {
-        return insert(Arrays.asList(transportPlanDto));
+    public Collection<TransPlanDto> insert(TransPlanDto transPlanDto) {
+        return insert(Arrays.asList(transPlanDto));
     }
 
-    public Collection<TransportPlanDto> insert(List<TransportPlanDto> transportPlanDtos) {
-        return mongoTemplate.insertAll(transportPlanDtos);
+    public Collection<TransPlanDto> insert(List<TransPlanDto> transPlanDtos) {
+        return mongoTemplate.insertAll(transPlanDtos);
     }
 
-    public UpdateResult update(TransportPlanDto partDto) {
-        Query query = buildUniqueQuery(partDto.getPlanId());
+    public UpdateResult update(TransPlanDto planDto) {
+        Query query = buildUniqueQuery(planDto.getPlanId());
         Update update = new Update();
-        update.set("custId", partDto.getCustId());
-        update.set("dockId", partDto.getDockId());
-        update.set("orderId", partDto.getOrderId());
-        return mongoTemplate.updateMulti(query, update, TransportPlanDto.class);
+        update.set("custId", planDto.getCustId());
+        update.set("dockId", planDto.getDockId());
+        update.set("orderId", planDto.getOrderId());
+        return mongoTemplate.updateMulti(query, update, TransPlanDto.class);
     }
 
-    public DeleteResult delete(int partId) {
-        Query query = buildUniqueQuery(partId);
-        return mongoTemplate.remove(query, TransportPlanDto.class);
+    public DeleteResult delete(int planId) {
+        Query query = buildUniqueQuery(planId);
+        return mongoTemplate.remove(query, TransPlanDto.class);
     }
+
 }
