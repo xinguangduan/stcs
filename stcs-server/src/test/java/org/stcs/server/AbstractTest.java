@@ -81,4 +81,16 @@ public class AbstractTest {
 
         return response;
     }
+
+    MockHttpServletResponse getMockResponseByRestApiPatchWithJson(String url, Object jsonObject) throws Exception {
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.patch(url)
+                .accept(MediaType.APPLICATION_JSON).content(JSON.toJSONBytes(jsonObject))
+                .contentType(MediaType.APPLICATION_JSON);
+        MockHttpServletResponse response = mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        log.info(response.getContentAsString());
+
+        return response;
+    }
 }
