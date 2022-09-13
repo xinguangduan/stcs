@@ -1,6 +1,5 @@
 package org.stcs.server.rest;
 
-import static org.stcs.server.constant.GlobalConstant.*;
 import static org.stcs.server.protocol.STCSProtocolBuilder.*;
 
 import java.util.Arrays;
@@ -15,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.stcs.server.annotation.LatencyTime;
 import org.stcs.server.common.Pagination;
+import org.stcs.server.constant.ResultType;
 import org.stcs.server.entity.CustomerEntity;
 import org.stcs.server.exception.STCSException;
 import org.stcs.server.service.CustomerService;
@@ -62,22 +62,19 @@ public class CustomerController extends AbstractController {
         if (result > 0) {
             return ResponseEntity.ok().body(buildSuccess());
         }
-        return ResponseEntity.ok(buildFailure(ERROR_1001, "add failure"));
+        return ResponseEntity.ok(buildFailure(ResultType.CUSTOMER_ADD_FAILURE));
     }
 
     @LatencyTime
     @PutMapping("/{custId}")
     public ResponseEntity update(@RequestBody JSONObject req, @PathVariable int custId) throws STCSException {
         final CustomerEntity customerEntity = customerService.find(custId);
-        if (customerEntity == null) {
-            return ResponseEntity.ok().body(buildFailure(ERROR_1005, "customer not found"));
-        }
         final CustomerEntity newCustomerEntity = JSON.to(CustomerEntity.class, req);
         long result = customerService.update(newCustomerEntity);
         if (result > 0) {
-            return ResponseEntity.ok(buildSuccess("update success"));
+            return ResponseEntity.ok(buildSuccess(ResultType.UPDATE_SUCCESS));
         }
-        return ResponseEntity.ok(buildFailure(ERROR_1003, "update failure"));
+        return ResponseEntity.ok(buildFailure(ResultType.CUSTOMER_UPDATE_FAILURE));
     }
 
     @LatencyTime
@@ -85,8 +82,8 @@ public class CustomerController extends AbstractController {
     public ResponseEntity delete(@PathVariable int custId) {
         long result = customerService.delete(custId);
         if (result > 0) {
-            return ResponseEntity.ok(buildSuccess("delete success"));
+            return ResponseEntity.ok(buildSuccess(ResultType.DELETE_SUCCESS));
         }
-        return ResponseEntity.ok(buildFailure(ERROR_1002, "delete failure"));
+        return ResponseEntity.ok(buildFailure(ResultType.CUSTOMER_DELETE_FAILURE));
     }
 }
