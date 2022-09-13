@@ -63,14 +63,6 @@ public final class STCSProtocolBuilder {
         return content;
     }
 
-    public static JSONObject buildFailure(ResultType resultType) {
-        final JSONObject content = new JSONObject();
-        content.put("code", resultType.getCode());
-        content.put("reason", resultType.getInfo());
-        content.put("messageId", KeyUtils.generateMessageId());
-        return content;
-    }
-
     public static <T> JSONObject buildResponseCollections(Collection<T> t) {
         final JSONObject resp = new JSONObject();
         resp.put("code", SUCCESS_CODE);
@@ -86,6 +78,22 @@ public final class STCSProtocolBuilder {
 //        resp.put("total", p.);
 //        resp.put("records", p.getRecords());
         return resp;
+    }
+
+    public static JSONObject buildSuccess(ResultType resultType) {
+        final JSONObject content = new JSONObject();
+        content.put("code", resultType.getCode());
+        content.put("message", resultType.getInfo());
+        content.put("messageId", KeyUtils.generateMessageId());
+        return content;
+    }
+
+    public static JSONObject buildFailure(ResultType resultType) {
+        final JSONObject content = new JSONObject();
+        content.put("code", resultType.getCode());
+        content.put("reason", resultType.getInfo());
+        content.put("messageId", KeyUtils.generateMessageId());
+        return content;
     }
 
     public static JSONObject buildTransResponse(String message, String currentNode, String nextNode, int distance, boolean isEnd) {

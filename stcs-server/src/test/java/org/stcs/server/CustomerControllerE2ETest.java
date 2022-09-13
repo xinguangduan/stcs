@@ -1,6 +1,7 @@
 package org.stcs.server;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,11 @@ import com.alibaba.fastjson2.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.stcs.server.constant.ResultType;
 import org.stcs.server.entity.CustomerEntity;
@@ -23,6 +27,9 @@ public class CustomerControllerE2ETest extends AbstractTest {
 
     @Autowired
     private CustomerService customerService;
+
+    @SpyBean
+    MongoTemplate spyMongoTemplate;
 
     @BeforeAll
     void setUp() {
@@ -77,6 +84,36 @@ public class CustomerControllerE2ETest extends AbstractTest {
     }
 
     @Test
+    void testGetAllWithPage() throws Exception {
+        MockHttpServletResponse response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/1/4");
+        JSONObject retBodyJson = JSONObject.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.getString("code")).isEqualTo("ok");
+        assertThat(retBodyJson.getIntValue("pageNum")).isEqualTo(1);
+        assertThat(retBodyJson.getIntValue("pageSize")).isEqualTo(4);
+        assertThat(retBodyJson.getIntValue("pages")).isGreaterThanOrEqualTo(2);
+        assertThat(retBodyJson.getIntValue("total")).isGreaterThanOrEqualTo(5);
+
+        response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/2/4");
+        retBodyJson = JSONObject.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.getString("code")).isEqualTo("ok");
+        assertThat(retBodyJson.getIntValue("pageNum")).isEqualTo(2);
+        assertThat(retBodyJson.getIntValue("pageSize")).isEqualTo(4);
+        assertThat(retBodyJson.getIntValue("pages")).isGreaterThanOrEqualTo(2);
+        assertThat(retBodyJson.getIntValue("total")).isGreaterThanOrEqualTo(5);
+
+        response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/3/4");
+        retBodyJson = JSONObject.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.getString("code")).isEqualTo("ok");
+        assertThat(retBodyJson.getIntValue("pageNum")).isGreaterThanOrEqualTo(1);
+        assertThat(retBodyJson.getIntValue("pageSize")).isEqualTo(4);
+        assertThat(retBodyJson.getIntValue("pages")).isGreaterThanOrEqualTo(2);
+        assertThat(retBodyJson.getIntValue("total")).isGreaterThanOrEqualTo(5);
+    }
+
+    @Test
     void testGetOneCustomer() throws Exception {
         String expectedResponse = "{\"custId\": 999,\"custName\": \"宇宙\"}";
 
@@ -121,8 +158,23 @@ public class CustomerControllerE2ETest extends AbstractTest {
         response = getMockResponseByRestApiGet(CUSTOMERS_PATH + "/119913");
         retBodyJson = JSON.parseObject(response.getContentAsString());
 
-        assertThat(retBodyJson.get("code")).isEqualTo(ResultType.CUSTOMER_NOT_FOUND.getCode());
-        assertThat(retBodyJson.get("reason")).isEqualTo(ResultType.CUSTOMER_NOT_FOUND.getInfo());
+        assertThat(retBodyJson.get("code")).isEqualTo(ResultType.RECORD_NOT_FOUND.getCode());
+        assertThat(retBodyJson.get("reason")).isEqualTo(ResultType.RECORD_NOT_FOUND.getInfo());
+        assertThat(retBodyJson.get("messageId")).isNotNull();
+    }
+
+    @Test
+    void testAddCustomerFailWithSpyMongoTemplate() throws Exception {
+        final List<CustomerEntity> customerEntities = List.of(
+                CustomerEntity.builder().custId(17).custName("新增失败").build());
+
+        when(spyMongoTemplate.insertAll(Mockito.anyList())).thenReturn(List.of());
+
+        MockHttpServletResponse response = getMockResponseByRestApiPostWithJson(CUSTOMERS_PATH, customerEntities);
+        JSONObject retBodyJson = JSON.parseObject(response.getContentAsString());
+
+        assertThat(retBodyJson.get("code")).isEqualTo(ResultType.CUSTOMER_ADD_FAILURE.getCode());
+        assertThat(retBodyJson.get("reason")).isEqualTo(ResultType.CUSTOMER_ADD_FAILURE.getInfo());
         assertThat(retBodyJson.get("messageId")).isNotNull();
     }
 }
