@@ -2,8 +2,10 @@ package org.stcs.server.exception;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +22,7 @@ public class GlobalExceptionHandler {
 
     private static JSONObject response(String code, String reason, String desc) {
         // 返回错误信息
-        JSONObject response = STCSProtocolBuilder.buildFailure(code, reason);
+        JSONObject response = STCSProtocolBuilder.buildFailure(code, reason, desc);
         try {
             log.error("occurring exception, response content:{}", response);
         } catch (Exception e) {
@@ -42,6 +44,20 @@ public class GlobalExceptionHandler {
     public JSONObject handleRuntimeError(HttpServletRequest req, RuntimeException e) {
         log.error("catch RuntimeException,request url:{}", req.getRequestURL(), e);
         return response("RuntimeException", "RuntimeException", "unknown");
+    }
+
+    @ExceptionHandler(value = JSONException.class)
+    @ResponseBody
+    public JSONObject handleJSonProcessError(HttpServletRequest req, JSONException e) {
+        log.error("catch JSONException, request url:{}", req.getRequestURL(), e);
+        return response("JSONException", "JSONException", e.getMessage());
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    @ResponseBody
+    public JSONObject handleHttpMessageJSonProcessError(HttpServletRequest req, HttpMessageNotReadableException e) {
+        log.error("catch HttpMessageNotReadableException, request url:{}", req.getRequestURL(), e);
+        return response("HttpMessageNotReadableException", "HttpMessageNotReadableException", e.getMessage());
     }
 
     @ExceptionHandler(value = STCSException.class)
