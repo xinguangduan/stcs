@@ -13,19 +13,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.stcs.server.config.Configuration;
 import org.stcs.server.entity.MaterialSpecEntity;
 import org.stcs.server.entity.PartEntity;
 import org.stcs.server.service.PartService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(PartController.class)
+@EnableConfigurationProperties(value = {Configuration.class})
+@WithMockUser(username = "stcs", password = "stcs")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class PartControllerTest {
 
@@ -51,7 +56,7 @@ class PartControllerTest {
 
         // Verify the results
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+        assertThat(response.getContentAsString()).isEqualTo("{\"code\":\"ok\",\"total\":1,\"records\":[{\"partId\":0,\"partDesc\":\"partDesc\",\"material\":{\"materialId\":0,\"materialDesc\":\"materialDesc\",\"materialSpec\":\"materialSpec\"},\"partNum\":0}]}");
     }
 
     @Test
@@ -67,7 +72,7 @@ class PartControllerTest {
 
         // Verify the results
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+        assertThat(response.getContentAsString()).isEqualTo("{\"code\":\"ok\",\"total\":0,\"records\":[]}");
     }
 
     @Test
@@ -86,7 +91,7 @@ class PartControllerTest {
 
         // Verify the results
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+        assertThat(response.getContentAsString()).isEqualTo("{\"code\":\"ok\",\"total\":1,\"records\":[{\"partId\":0,\"partDesc\":\"partDesc\",\"material\":{\"materialId\":0,\"materialDesc\":\"materialDesc\",\"materialSpec\":\"materialSpec\"},\"partNum\":0}]}");
     }
 
     @Test
@@ -98,13 +103,13 @@ class PartControllerTest {
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(post("/api/v1/parts")
-                        .content("content").contentType(MediaType.APPLICATION_JSON)
+                        .content("[]").contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.getContentAsString()).startsWith("{\"code\":\"1001\",\"reason\":\"1001\",\"messageId\":\"").endsWith("\"}");
     }
 
     @Test
@@ -121,13 +126,13 @@ class PartControllerTest {
 
         // Run the test
         final MockHttpServletResponse response = mockMvc.perform(put("/api/v1/parts/{partId}", 0)
-                        .content("content").contentType(MediaType.APPLICATION_JSON)
+                        .content("{}}").contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         // Verify the results
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+        assertThat(response.getContentAsString()).startsWith("{\"code\":\"1003\",\"reason\":\"update failure\",\"messageId\":\"").endsWith("\"}");
     }
 
     @Test
@@ -143,7 +148,7 @@ class PartControllerTest {
 
         // Verify the results
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+        assertThat(response.getContentAsString()).startsWith("{\"code\":\"1005\",\"reason\":\"order not found\",\"messageId\":\"").endsWith("\"}");
     }
 
     @Test
@@ -158,6 +163,6 @@ class PartControllerTest {
 
         // Verify the results
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo("expectedResponse");
+        assertThat(response.getContentAsString()).startsWith("{\"code\":\"1002\",\"reason\":\"delete failure\",\"messageId\":\"").endsWith("\"}");
     }
 }
