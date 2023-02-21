@@ -38,11 +38,11 @@ public class STCSProtocolBuilder {
         return content;
     }
 
-    public static JSONObject buildFailure(String messageId, String code, String reason) {
+    public static JSONObject buildFailure(String code, String reason, String messageId) {
         final JSONObject content = new JSONObject();
         content.put("code", code);
         content.put("reason", reason);
-        content.put("messageId", messageId);
+        content.put("desc", messageId);
         return content;
     }
 
@@ -91,7 +91,7 @@ public class STCSProtocolBuilder {
         final JSONObject content = new JSONObject();
         content.put("code", resultType.getCode());
         content.put("reason", resultType.getInfo());
-        content.put("messageId", KeyUtils.generateMessageId());
+        content.put("desc", resultType.getDescription());
         return content;
     }
 
