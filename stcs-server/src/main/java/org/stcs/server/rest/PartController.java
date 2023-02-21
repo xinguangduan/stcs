@@ -26,7 +26,6 @@ import org.stcs.server.service.PartService;
 
 @RestController
 @Slf4j
-@SecurityRequirement(name = "stcs")
 @RequestMapping("/api/v1/parts")
 public class PartController extends AbstractController {
 

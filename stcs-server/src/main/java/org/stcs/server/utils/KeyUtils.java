@@ -3,11 +3,10 @@ package org.stcs.server.utils;
 
 import java.util.UUID;
 
-public final class KeyUtils {
+import lombok.experimental.UtilityClass;
 
-    private KeyUtils() {
-        throw new IllegalStateException("Utility class");
-    }
+@UtilityClass
+public final class KeyUtils {
 
     public static String generateMessageId() {
         return UUID.randomUUID().toString();

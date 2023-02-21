@@ -1,5 +1,8 @@
 package org.stcs.server.constant;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public final class GlobalConstant {
     public final static String ERROR_1000 = "1000";
     public final static String ERROR_1001 = "1001";
@@ -8,8 +11,4 @@ public final class GlobalConstant {
     public final static String ERROR_1004 = "1004";
     public final static String ERROR_1005 = "1005";// not found record
     public final static String SUCCESS_CODE = "ok";
-
-    private GlobalConstant() {
-        throw new IllegalStateException("Utility class");
-    }
 }

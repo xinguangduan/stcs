@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 @Configuration
 @Slf4j
-public class MongoConfig implements EnvironmentAware {
+public class MongoDBConfig implements EnvironmentAware {
 
     @Setter
     @Getter

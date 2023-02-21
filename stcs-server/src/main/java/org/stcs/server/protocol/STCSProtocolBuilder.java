@@ -7,14 +7,13 @@ import java.util.Collection;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import lombok.experimental.UtilityClass;
 import org.stcs.server.common.Pagination;
 import org.stcs.server.constant.ResultType;
 import org.stcs.server.utils.KeyUtils;
 
-public final class STCSProtocolBuilder {
-
-    private STCSProtocolBuilder() {
-    }
+@UtilityClass
+public class STCSProtocolBuilder {
 
     public static JSONObject buildSuccess() {
         final JSONObject content = new JSONObject();
