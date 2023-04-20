@@ -14,6 +14,7 @@ import org.stcs.server.dao.CustomerDao;
 import org.stcs.server.dto.CustomerDto;
 import org.stcs.server.entity.CustomerEntity;
 import org.stcs.server.exception.STCSException;
+import org.stcs.server.exception.STCSExceptionEntity;
 import org.stcs.server.mapper.CustomerMapper;
 
 @Service
@@ -33,10 +34,13 @@ public class CustomerService extends AbstractService {
         return customerEntity;
     }
 
-    public List<CustomerEntity> findAll() {
+    public List<CustomerEntity> findAll() throws STCSException {
         List<CustomerEntity> customerEntities = new ArrayList<>();
         List<CustomerDto> customerDtos = customerDao.findAll();
         CustomerMapper.converter.toEntity(customerDtos, customerEntities);
+        if(customerDtos==null){
+            throw new STCSException(STCSExceptionEntity.builder().build());
+        }
         return customerEntities;
     }
 

@@ -7,14 +7,13 @@ import java.util.Collection;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import lombok.experimental.UtilityClass;
 import org.stcs.server.common.Pagination;
 import org.stcs.server.constant.ResultType;
 import org.stcs.server.utils.KeyUtils;
 
-public final class STCSProtocolBuilder {
-
-    private STCSProtocolBuilder() {
-    }
+@UtilityClass
+public class STCSProtocolBuilder {
 
     public static JSONObject buildSuccess() {
         final JSONObject content = new JSONObject();
@@ -39,11 +38,11 @@ public final class STCSProtocolBuilder {
         return content;
     }
 
-    public static JSONObject buildFailure(String messageId, String code, String reason) {
+    public static JSONObject buildFailure(String code, String reason, String messageId) {
         final JSONObject content = new JSONObject();
         content.put("code", code);
         content.put("reason", reason);
-        content.put("messageId", messageId);
+        content.put("desc", messageId);
         return content;
     }
 
@@ -92,7 +91,7 @@ public final class STCSProtocolBuilder {
         final JSONObject content = new JSONObject();
         content.put("code", resultType.getCode());
         content.put("reason", resultType.getInfo());
-        content.put("messageId", KeyUtils.generateMessageId());
+        content.put("desc", resultType.getDescription());
         return content;
     }
 

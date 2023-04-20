@@ -22,7 +22,6 @@ import org.stcs.server.service.TransPlanService;
 
 @RestController
 @Slf4j
-@SecurityRequirement(name = "stcs")
 @RequestMapping("/api/v1/transplans")
 public class TransPlanController extends AbstractController {
 

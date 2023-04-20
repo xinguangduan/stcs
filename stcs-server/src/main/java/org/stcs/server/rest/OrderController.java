@@ -24,7 +24,6 @@ import org.stcs.server.service.TransCalculationService;
 
 @RestController
 @Slf4j
-@SecurityRequirement(name = "stcs")
 @RequestMapping("/api/v1/orders")
 public class OrderController extends AbstractController {
 

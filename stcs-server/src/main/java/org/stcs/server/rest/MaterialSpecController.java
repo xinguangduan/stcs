@@ -21,7 +21,6 @@ import org.stcs.server.service.MaterialSpecService;
 
 @RestController
 @Slf4j
-@SecurityRequirement(name = "stcs")
 @RequestMapping("/api/v1/materials")
 public class MaterialSpecController extends AbstractController {
 

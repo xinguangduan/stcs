@@ -2,12 +2,12 @@ package org.stcs.server.rest;
 
 import static org.stcs.server.protocol.STCSProtocolBuilder.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,6 @@ import org.stcs.server.service.CustomerService;
 
 @RestController
 @Slf4j
-@SecurityRequirement(name = "stcs")
 @RequestMapping(value = "/api/v1/customers")
 public class CustomerController extends AbstractController {
 
@@ -34,14 +33,20 @@ public class CustomerController extends AbstractController {
 
     @LatencyTime
     @GetMapping
-    public ResponseEntity find() {
-        final List<CustomerEntity> customerEntities = customerService.findAll();
-        return ResponseEntity.ok().body(buildResponseCollections(customerEntities));
+    public ResponseEntity<?>  find() {
+        try{
+            final List<CustomerEntity> customerEntities = customerService.findAll();
+            return ResponseEntity.ok().body(buildResponseCollections(customerEntities));
+        }catch (STCSException e){
+            return ResponseEntity.badRequest().body(buildResponseCollections(new ArrayList<>()));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(buildResponseCollections(new ArrayList<>()));
+        }
     }
 
     @LatencyTime
     @GetMapping("/{custId}")
-    public ResponseEntity findOne(@PathVariable int custId) throws STCSException {
+    public ResponseEntity<?> findOne(@PathVariable int custId) throws STCSException {
         final CustomerEntity customerEntity = customerService.find(custId);
         return ResponseEntity.ok().body(buildResponseCollections(Arrays.asList(customerEntity)));
     }
